@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Foundations for Aging-Inclusive Technology</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .header .subtitle {
+            font-size: 18px;
+            color: #718096;
+            max-width: 800px;
+            margin: 15px auto 0;
+            line-height: 1.6;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .principle-card {
+            background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 6px solid;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .principle-card.p1 { border-left-color: #667eea; }
+        .principle-card.p2 { border-left-color: #f093fb; }
+        .principle-card.p3 { border-left-color: #4facfe; }
+        .principle-card.p4 { border-left-color: #10b981; }
+        .principle-card.p5 { border-left-color: #fa709a; }
+
+        .principle-number {
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 45px;
+            margin-bottom: 15px;
+        }
+
+        .principle-card.p2 .principle-number { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .principle-card.p3 .principle-number { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .principle-card.p4 .principle-number { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .principle-card.p5 .principle-number { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+
+        .principle-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        .approaches-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            margin-top: 20px;
+        }
+
+        .approaches-list {
+            list-style: none;
+        }
+
+        .approach-item {
+            margin-bottom: 10px;
+        }
+
+        .approach-button {
+            width: 100%;
+            padding: 12px 15px 12px 35px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            position: relative;
+            color: #4a5568;
+            font-size: 15px;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .approach-button:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            transform: translateX(3px);
+        }
+
+        .approach-button.active {
+            background: #edf2f7;
+            border-color: #667eea;
+            font-weight: 600;
+        }
+
+        .approach-button:before {
+            content: "▶";
+            position: absolute;
+            left: 12px;
+            color: #667eea;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .approach-button.active:before {
+            transform: rotate(90deg);
+        }
+
+        .principle-card.p2 .approach-button:before { color: #f093fb; }
+        .principle-card.p3 .approach-button:before { color: #4facfe; }
+        .principle-card.p4 .approach-button:before { color: #10b981; }
+        .principle-card.p5 .approach-button:before { color: #fa709a; }
+
+        .approach-content {
+            display: none;
+            margin-top: 15px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .approach-content.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .approach-quote {
+            font-style: italic;
+            color: #667eea;
+            padding: 15px;
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .principle-card.p2 .approach-quote { color: #f093fb; border-left-color: #f093fb; }
+        .principle-card.p3 .approach-quote { color: #4facfe; border-left-color: #4facfe; }
+        .principle-card.p4 .approach-quote { color: #059669; border-left-color: #10b981; }
+        .principle-card.p5 .approach-quote { color: #fa709a; border-left-color: #fa709a; }
+
+        .approach-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .info-card-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .info-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2d3748;
+        }
+
+        .info-card.insights .info-card-header { border-bottom-color: #fbbf24; }
+        .info-card.insights .info-card-title { color: #d97706; }
+        
+        .info-card.takeaways .info-card-header { border-bottom-color: #60a5fa; }
+        .info-card.takeaways .info-card-title { color: #2563eb; }
+        
+        .info-card.practice .info-card-header { border-bottom-color: #34d399; }
+        .info-card.practice .info-card-title { color: #059669; }
+
+        .info-card-content {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 900px) {
+            .approach-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .footer-section {
+            margin-bottom: 25px;
+        }
+
+        .footer-section h3 {
+            font-size: 15px;
+            color: #5a6b7d;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Georgia', serif;
+        }
+
+        .footer-section p {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.7;
+            margin-bottom: 8px;
+        }
+
+        .footer-section .author {
+            font-size: 16px;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .footer-section .credentials {
+            font-size: 14px;
+            color: #718096;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        .footer-section .project {
+            font-size: 14px;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .expert-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .expert-item {
+            font-size: 14px;
+            color: #4a5568;
+            padding: 8px 0;
+        }
+
+        .expert-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .expert-title {
+            font-style: italic;
+            color: #718096;
+        }
+
+        .literature-list {
+            margin-top: 10px;
+        }
+
+        .literature-item {
+            font-size: 13px;
+            color: #4a5568;
+            padding: 6px 0 6px 20px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .literature-item:before {
+            content: "•";
+            position: absolute;
+            left: 5px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 30px;
+            }
+
+            .principle-card {
+                page-break-inside: avoid;
+            }
+
+            .approach-content {
+                display: block !important;
+            }
+
+            .approach-button:before {
+                display: none;
+            }
+
+            .approach-cards {
+                grid-template-columns: 1fr;
+                page-break-inside: avoid;
+            }
+
+            .info-card {
+                page-break-inside: avoid;
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .principles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .expert-list {
+                grid-template-columns: 1fr;
+            }
+
+            .approach-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .info-card {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Design Foundations for Aging-Inclusive Technology</h1>
+            <p class="subtitle">Five Evidence-Based Big Ideas with Key Approaches for Creating Technology for Older Adults</p>
+        </div>
+
+        <div class="principles-grid" id="principlesGrid"></div>
+
+        <div class="footer">
+            <div class="footer-section">
+                <h3>Research Attribution</h3>
+                <p style="font-size: 17px; color: #2d3748; font-weight: 700; margin-bottom: 3px; margin-top: 0;">Sneha Wadhwa</p>
+                <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin: 0;">
+                    Master's Candidate, Learning Design, Innovation & Technology<br>
+                    Harvard Graduate School of Education
+                </p>
+                
+                <p style="font-size: 14px; color: #4a5568; line-height: 1.7; margin-top: 20px; margin-bottom: 20px;">
+                    Developed as project work for <strong><em>Impact by Design</em></strong> course at <strong><em>Harvard Graduate School of Education</em></strong>
+                </p>
+                
+                <div style="margin-top: 20px;">
+                    <p style="font-size: 13px; color: #718096; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Instructed by</p>
+                    <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin: 0;">
+                        David Dockterman, Lecturer on Education<br>
+                        Harvard Graduate School of Education
+                    </p>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <p style="font-size: 13px; color: #718096; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Mentored by</p>
+                    <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin: 0;">
+                        Annette R. Change<br>
+                        Senior Lead Product Manager, Cox Automotive Inc.
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Research Methodology</h3>
+                <p>Expert interviews • Literature review • Challenge mapping • Design thinking • Direct interviews with senior adults</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Expert Contributors</h3>
+                <div class="expert-list">
+                    <div class="expert-item">
+                        <div class="expert-name">Brittne Kakulla, PhD</div>
+                        <div class="expert-title">Research Director, AARP</div>
+                    </div>
+                    <div class="expert-item">
+                        <div class="expert-name">Nathaniel Farouz</div>
+                        <div class="expert-title">CEO, Sindora Keppel Senior</div>
+                    </div>
+                    <div class="expert-item">
+                        <div class="expert-name">Neil D'Souza</div>
+                        <div class="expert-title">CEO, GetSetUp</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Literature Referenced</h3>
+                <div class="literature-list">
+                    <div class="literature-item">Mannheim, I., et al. (2022). Ageism in the Design of Digital Technology</div>
+                    <div class="literature-item">Rogers, E. M. (2003). Diffusion of Innovations (5th ed.)</div>
+                    <div class="literature-item">Rowe, J. W., & Kahn, R. L. (1997). Successful Aging</div>
+                    <div class="literature-item">Additional gerontological research on technology adoption, social learning, and aging populations</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const principlesData = [
+        {
+                "number": 1,
+                "name": "Learning Infrastructure, Not Just Product Features",
+                "approaches": [
+                        {
+                                "name": "Identity-Affirming Design",
+                                "insights": "Older adults internalize cultural narratives that they \"can't learn\" or \"don't need to”\nThis is an emotional/identity barrier, not just skill-based\nTheir \"Jobs to Be Done\" are tied to identity and purpose, not novelty or performance",
+                                "takeaways": "Counter self-ageism by creating low stakes experiences/engagement that builds confidence. \nReinforce agency and confidence by enabling self-directed exploration that helps users reach their goals.",
+                                "in_practice": "Frame tech use as identity-affirming (\"help me reach my goals\"), use gamified or low-stakes contexts to reduce fear of failure\nUse gamified or low-stakes experiences to reduce fear of failure.",
+                                "quote": "\"Design literacy and tech literacy must develop together\" — Brittne Kakulla, AARP"
+                        },
+                        {
+                                "name": "Learning Through Low-Stakes Practice and Gamification",
+                                "insights": "Motivation among seniors is intrinsic and wellbeing-oriented (joy, mastery, connection) rather than extrinsic (points, achievements).\nEnjoyment of competition and recognition builds social identity",
+                                "takeaways": "Gamified micro-learning aligns with their cognitive and emotional patterns — repetition, small wins, meaningful contexts\nRecognition functions as emotional reward and motivator\nGamification → reinforces engagement with personal goals",
+                                "in_practice": "Design games that teach transferable tech skills, use repetition and small wins in meaningful contexts, enable boasting about achievements (builds social identity)\nConnect to personal goals rather than leaderboards",
+                                "quote": "”Games is a gateway to learn technology\" — Brittne Kakulla, AARP"
+                        },
+                        {
+                                "name": "Design Cognitive-Friendly Interaction Layers",
+                                "insights": "Older adults process information differently than younger adults\nSenior adults have decades of learned behaviors shaped by analog and early digital technologies.",
+                                "takeaways": "Design interactions that reduce cognitive load and accommodate age-related changes in processing speed, working memory, and attention. \nDesign should build on existing mental models rather than requiring entirely new paradigms.",
+                                "in_practice": "Use clear visual hierarchies, minimal distractions, and consistent patterns.\nReduce distractions and competing elements, provide clear feedback for every action, use familiar metaphors, build in confirmation steps, allow time for processing\nDon't force users to learn entirely new interaction paradigms when familiar ones can be adapted.",
+                                "quote": "\"For seniors, routines shaped most of their lives — not technology. So, if we're designing for them, we need to support that sense of structure.\" — Neil D'Souza, GetSetUp"
+                        },
+                        {
+                                "name": "Create Coherent Ecosystems & Plan for Frictionless Entry and Exit",
+                                "insights": "Senior adults struggle when required to jump between multiple platforms or interfaces\nUsers need clear understanding of where they are in the system and how to exit\nCurrent reality: seniors must learn multiple disconnected systems",
+                                "takeaways": "Eliminate unnecessary navigation between tools, platforms, or cognitive contexts \nIntegrate complementary functions within single, coherent experiences rather than forcing users to switch contexts \nDesign interoperable, seamless systems that work at the household level.\nProvide clear entry points and exit pathways so users always know their location and how to leave. \nEvery additional disconnected system creates exponential learning burden",
+                                "in_practice": "Map user journeys to identify and remove friction points where seniors must navigate between tools\nDesign single-interface experiences. redesign to consolidate experiences.\nBuild products that integrate with existing platforms, use consistent design patterns, create single sign-on and unified settings, design for household-level usability (caregivers + seniors)",
+                                "quote": "\"Fragmented interfaces foster confusion.\" — Observation"
+                        },
+                        {
+                                "name": "Trust-Building Through Transparency and Ongoing Support",
+                                "insights": "Trust isn't just a feature — it's a learning condition: seniors must understand what's happening\nThey rely on trusted intermediaries (family, brands, caregivers)\nTechnology evolves constantly; each change resets the learning curve\nYoung users adapt quickly; older users need structured help",
+                                "takeaways": "Provide ongoing learning opportunities that help users adapt to updates and new features without overwhelming them\nReduce cognitive load by making systems seamless, consistent, and predictable over time.",
+                                "in_practice": "Create onboarding that explicitly states: \"Here's what this does,\" \"Here's why you might want it,\" and \"Here's how you stay in control\" \nUse plain language, not technical jargon, to explain privacy settings and data usage \nWhen introducing updates or new features, provide clear guidance on what changed and why it matters \nOffer pathways for users to build confidence as technology evolves—don't assume they'll \"figure it out\" \nMaintain consistent interaction patterns even as features expand",
+                                "quote": "\"Recognize that trust is a learning condition — seniors must understand what's happening.\" — Brittne Kakulla, AARP"
+                        }
+                ]
+        },
+        {
+                "number": 2,
+                "name": "Agency and Autonomy, Not Monitoring and Control",
+                "approaches": [
+                        {
+                                "name": "Design for Self-Directed, Empowering Experiences",
+                                "insights": "Goals are personal — seniors choose how to live well\nThe expectation is not more tech, but integrated, empowering experiences",
+                                "takeaways": "Agency and autonomy define perceived usefulness\nTransparency emerged as a core comfort factor for senior adults—users need clear understanding of system behavior to feel in control",
+                                "in_practice": "Users control data, settings, and permissions \nDesign should help them stay motivated to meet their own goals (not imposed goals) \nEnable self-directed exploration \nProvide transparent explanations of how systems work so users can make informed, self-directed choices \nAlign with UDL's principle of engagement and multiple means of action and expression",
+                                "quote": "\" Health goals are personal — they choose how to live well. Design should help them stay motivated to meet their own goals” — Nathaniel Farouz, Sindora Keppel"
+                        },
+                        {
+                                "name": "Position Seniors as Primary Users, Not Caregivers",
+                                "insights": "Many AgeTech products make caregivers the primary user, reducing senior autonomy\nAutomated monitoring should free up caregiver time for companionship, not replace human interaction",
+                                "takeaways": "Design for the senior adult as the primary user; caregiver features should amplify human connection, not replace it.",
+                                "in_practice": "Senior controls the interface\nMinimize health monitoring to make it empowering \nUse digital systems to stay socially connected and free caregiver time for human connection",
+                                "quote": "\" Use digital systems to help senior adults stay socially connected. Free up caregiver time for human connection” — Nathaniel Farouz, Sindora Keppel"
+                        },
+                        {
+                                "name": "Connect to Purpose, Identity, and Contribution",
+                                "insights": "Fundamental Needs:\nDignity\nConnection & Social Connectedness\nAgency & Autonomy\nSocial Identity",
+                                "takeaways": "Frame technology around fundamental needs\nEmotional Drivers:\nRegret of missing out (especially with technology)\nEnjoyment of competition & recognition\nRecognition as emotional reward",
+                                "in_practice": "Enable sharing knowledge/experience\nSupport legacy-building\nFacilitate intergenerational connection\nFrame features around contribution\nBuild purposeful engagement",
+                                "quote": "\" AgeTech’s real value lies in enabling connection, autonomy, and purpose, not just clinical safety.” — Nathaniel Farouz, Sindora Keppel"
+                        },
+                        {
+                                "name": "Co-Design WITH Senior Adults, Not FOR Them",
+                                "insights": "Learning design can offer frameworks (like UDL, participatory pedagogy, formative feedback cycles) to structure co-creation processes\nAccessibility seen as integral, not an add-on — similar to how inclusive learning design treats UDL",
+                                "takeaways": "Include seniors as active participants from the beginning, integrating accessibility as integral (not add-on).",
+                                "in_practice": "Recruit senior advisors for design team, conduct participatory design workshops, test early and often, compensate participants fairly, integrate what older adults know and prefer into design principles",
+                                "quote": "\" Ageism in design is not just attitudinal—it is infrastructural, embedded in how problems are defined and who is invited to solve them” — Ageism in the Design of Digital Technology (Mannheim, I., et al. (2022))"
+                        }
+                ]
+        },
+        {
+                "number": 3,
+                "name": "Holistic Wellbeing, Not Just Physical Health",
+                "approaches": [
+                        {
+                                "name": "Design for All Four Domains of Wellbeing",
+                                "insights": "Current AgeTech focuses on physical health (falls, medication, monitoring) Successful aging requires attention to all four domains \nSocial connection includes both active participation AND passive social presence (ambient companionship that addresses loneliness)",
+                                "takeaways": "Health-focused products must expand beyond physical metrics to include cognitive, social, and purpose dimensions \nSocial domain is not just about active participation—passive social presence is a legitimate form of connection",
+                                "in_practice": "If health-focused, add social or learning features If communication-focused, add purpose/contribution elements Design for multiple levels of social engagement, including passive observation with social awareness",
+                                "quote": "\"AgeTech's real value lies in enabling connection, autonomy, and purpose, not just clinical safety.\" — Nathaniel Farouz, Sindora Keppel"
+                        },
+                        {
+                                "name": "Design for Socially-Connected Aging",
+                                "insights": "Tiered participation allows users to engage at their comfort level: passive observation → light interaction → active participation\nThe most powerful AgeTech products bridge online engagement and real-life belonging\nRole of technology is seen as an enabler of social learning, not a replacement for human interaction",
+                                "takeaways": "Bridge online engagement and real-life belonging; position technology as enabler of social learning and companionship.\nMove beyond engagement metrics to belonging and companionship \nDesign for loneliness means creating ambient social presence—users can feel \"not alone\" without pressure to actively engage\nNot all social experiences require video, audio, or active posting",
+                                "in_practice": "Facilitate meaningful connections (\"find your tribe\") \nMove beyond engagement to belonging \nEncourage intergenerational and community-based participation \nCreate tiered participation models: (1) passive observation (watch/listen with awareness of others), (2) light interaction (chat while consuming), (3) active participation (full audio/video engagement)\nDesign streaming/content platforms with visible social elements that don't require contribution\nAllow users to feel 'not alone' without pressure to actively engage \nUse social learning theory as design lens for active learning features",
+                                "quote": "\"The most powerful AgeTech products bridge online engagement and real-life belonging.\" — Brittne Kakulla, AARP"
+                        },
+                        {
+                                "name": "Include Cultural, Economic, and Contextual Accessibility",
+                                "insights": "Accessibility isn't just usability and safety\nMust include psychological dimension (how does it make them feel?), cultural dimension (how is aging and technology interpreted within context?), experiential design (supporting living well, not just aging safely)",
+                                "takeaways": "Extend accessibility beyond interface to include cultural and experiential dimensions.\nPsychological dimension: Instead of just can they use it? Ask how does it make them feel?\nExperiential and emotional design: Creating technology that supports living well, not just aging safely. \nCultural dimensions: How is aging and technology interpreted within context?",
+                                "in_practice": "Error prevention vs Joy enablement\nCan they use it safely? vs  Does it make hem feel capable and valued?\nIs it accessible? vs Is it meaningful and empowering?\nIs it usable? vs Does it enrich identity, purpose, and connection?",
+                                "quote": "\" Only a few projects integrate psychosocial or cultural dimensions of aging—focus remains on usability and safety. \" — Ageism in the Design of Digital Technology (Mannheim, I., et al. (2022))"
+                        }
+                ]
+        },
+        {
+                "number": 4,
+                "name": "Meaningful Engagement, Not Just Time-Filling",
+                "approaches": [
+                        {
+                                "name": "Design for Intrinsic Motivation and Wellbeing",
+                                "insights": "Seniors prefer structured engagement on their terms (scheduled programming model) rather than manipulative tactics designed to maximize time-on-platform\nMost tech is designed to maximize engagement metrics (time on site, clicks, opens); senior adults need tech designed to maximize value per unit of time invested \nSeniors have finite energy and time—engagement should align with their goals, not exploit their attention",
+                                "takeaways": "Distinguish between engagement (time spent) and value (outcomes achieved)\nScheduled, predictable engagement patterns respect user autonomy and routines\nExperiential and emotional design: Creating technology that supports living well, not just aging safely. \nCultural dimensions: How is aging and technology interpreted within context?",
+                                "in_practice": "Enable graceful exits: Make it easy to pause, save, and return without guilt or pressure tactics (\"You'll lose your streak!\")\nRespect routines: Provide scheduled programming or content windows users can plan around (like TV), not infinite scrolling or FOMO-driven notifications\nUser-controlled notifications: Let users set their own reminder preferences; default to less, not more\nSupport rewatching: Design for repetition—easy bookmarking, \"watch again\" options, building on prior viewing",
+                                "quote": "\"Seniors want to save time, money, and stay healthy — but let them control how.\" — User research"
+                        }
+                ]
+        },
+        {
+                "number": 5,
+                "name": "Adaptation, Personalization, and Accessible Interfaces",
+                "approaches": [
+                        {
+                                "name": "Design for Adaptation, Not Perfection",
+                                "insights": "Successful aging ≠ maintaining peak function; it means engaging while accepting natural changes\nOlder adults are positioned as lacking ability rather than possessing unique experience\nTechno-solutionism tries to \"solve\" aging rather than supporting living well while aging Deficit narratives create paternalistic designs that reduce autonomy",
+                                "takeaways": "Adaptation should be expected and designed for, not treated as edge case \nFrame design around capability and experience, not deficits and decline \nTechnology should adapt to users, not force users to maintain static capabilities \nSupport living well while aging, not \"fixing\" or \"solving\" aging",
+                                "in_practice": "Adjustable interfaces that accommodate changing needs \nMultiple interaction modes (visual, auditory, tactile) users can switch between \nGraceful degradation—features remain accessible as abilities change\nTechnology adapts as users' capabilities change, without requiring new products or major relearning \nFrame features around what users can do and want to achieve, not what they can no longer do",
+                                "quote": "\"Older adults are often framed as passive, technophobic, or dependent, leading to paternalistic designs.\"\u000b— Mannheim et al. (2022)"
+                        },
+                        {
+                                "name": "Address Specific Usability Barriers Through Multiple Modalities",
+                                "insights": "Age-related changes are diverse and specific: vision (contrast, small text), motor (dexterity, tremor), cognitive (processing speed, working memory) \nEach barrier requires specific solution—there is no one-size-fits-all \"accessible\" design \nVoice interfaces remove multiple barriers simultaneously: no typing (motor), no reading (visual), natural conversation (cognitive)",
+                                "takeaways": "Systematically address each barrier type with evidence-based solutions \nProvide multiple pathways to accomplish the same task (visual + voice + touch) \nVoice interaction is not a \"nice to have\"—it's a primary accessibility strategy that removes keyboard, screen, and navigation barriers \nDifferent users need different combinations of accommodations",
+                                "in_practice": "Visual barriers: Adjustable brightness/contrast, Larger default text and touch targets, Clear visual hierarchy, High contrast modes\nMotor barriers: Larger touch targets, Longer tap durations accepted, Voice commands as alternative to all physical interactions\nCognitive barriers: Reduce cognitive load through simplification, Maintain consistent patterns across interface, Provide context and clear labels, Make information visible, Voice interfaces that use natural conversation instead of requiring users to learn complex navigation\nVoice as cross-barrier solution: Uses familiar conversation patterns, Provides alternative pathway when traditional interfaces fail",
+                                "quote": "“Voice companion will be the gateway to drive engagement” — Neil Dsouza, Get Set Up"
+                        },
+                        {
+                                "name": "Build Person-Centered Profiles",
+                                "insights": "Aging is heterogeneous — huge diversity in abilities and preferences\nWhat works for one 70-year-old won't work for another\nPerson-centered design requires learning individual preferences, not applying age-based assumptions",
+                                "takeaways": "Customization should be granular and comprehensive, not just \"large font\" toggle \nSystems should learn and remember individual preferences\nAllow users to control level of assistance they receive \nAdaptive systems should adjust based on individual patterns, not age stereotypes",
+                                "in_practice": "Onboarding that learns preferences through usage \nSaved profiles with individual settings that persist \nAdaptive difficulty that adjusts to user's demonstrated capability \nRemember user choices across sessions\nGranular control over assistance levels\nAllow users to opt out of features designed to help if they don't find them helpful",
+                                "quote": "\"Older adults are often framed as passive, technophobic, or dependent, leading to paternalistic designs.\"\u000b— Mannheim et al. (2022)"
+                        }
+                ]
+        }
+];
+
+        function formatWithBullets(text) {
+            // Fix the typo
+            text = text.replace(/Does it make hem feel/g, 'Does it make them feel');
+            
+            // Split by newlines and create bullet points
+            const lines = text.split('\n').filter(line => line.trim());
+            if (lines.length === 1) {
+                // Single line, add period if missing
+                const trimmed = lines[0].trim();
+                return trimmed.match(/[.!?]$/) ? trimmed : trimmed + '.';
+            }
+            // Multiple lines, add bullets and periods with proper structure
+            return '<ul style="margin: 0; padding-left: 20px; list-style-type: none;">' + 
+                lines.map(line => {
+                    const trimmed = line.trim();
+                    // Add period if missing at end
+                    const withPeriod = trimmed.match(/[.!?]$/) ? trimmed : trimmed + '.';
+                    return `<li style="margin-bottom: 8px; text-indent: -1em; padding-left: 1em;">• ${withPeriod}</li>`;
+                }).join('') + 
+                '</ul>';
+        }
+
+        function renderPrinciples() {
+            const grid = document.getElementById('principlesGrid');
+            
+            principlesData.forEach(principle => {
+                const card = document.createElement('div');
+                card.className = `principle-card p${principle.number}`;
+                
+                let approachesHTML = '';
+                principle.approaches.forEach((approach, idx) => {
+                    const approachId = `p${principle.number}-a${idx}`;
+                    approachesHTML += `
+                        <li class="approach-item">
+                            <button class="approach-button" onclick="toggleApproach('${approachId}')">
+                                ${approach.name}
+                            </button>
+                            <div class="approach-content" id="${approachId}">
+                                ${approach.quote ? `<div class="approach-quote">${approach.quote}</div>` : ''}
+                                <div class="approach-cards">
+                                    <div class="info-card insights">
+                                        <div class="info-card-header">
+                                            <div class="info-card-icon">💡</div>
+                                            <div class="info-card-title">Insights</div>
+                                        </div>
+                                        <div class="info-card-content">${formatWithBullets(approach.insights)}</div>
+                                    </div>
+                                    <div class="info-card takeaways">
+                                        <div class="info-card-header">
+                                            <div class="info-card-icon">🎯</div>
+                                            <div class="info-card-title">Key Takeaways</div>
+                                        </div>
+                                        <div class="info-card-content">${formatWithBullets(approach.takeaways)}</div>
+                                    </div>
+                                    <div class="info-card practice">
+                                        <div class="info-card-header">
+                                            <div class="info-card-icon">⚙️</div>
+                                            <div class="info-card-title">In Practice</div>
+                                        </div>
+                                        <div class="info-card-content">${formatWithBullets(approach.in_practice)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    `;
+                });
+                
+                card.innerHTML = `
+                    <div class="principle-number">${principle.number}</div>
+                    <div class="principle-title">${principle.name}</div>
+                    <div class="approaches-label">Key Approaches</div>
+                    <ul class="approaches-list">
+                        ${approachesHTML}
+                    </ul>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleApproach(id) {
+            const content = document.getElementById(id);
+            const button = content.previousElementSibling;
+            
+            // Close all other approaches in the same card
+            const card = content.closest('.principle-card');
+            card.querySelectorAll('.approach-content').forEach(el => {
+                if (el.id !== id) {
+                    el.classList.remove('active');
+                    el.previousElementSibling.classList.remove('active');
+                }
+            });
+            
+            // Toggle current approach
+            content.classList.toggle('active');
+            button.classList.toggle('active');
+        }
+
+        // Initialize
+        renderPrinciples();
+    </script>
+</body>
+</html>
