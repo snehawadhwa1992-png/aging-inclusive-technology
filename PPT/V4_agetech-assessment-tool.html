@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgeTech Design Principles Assessment Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .help-text {
+            font-size: 13px;
+            color: #718096;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .question-card {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 17px;
+            color: #2d3748;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .radio-item:hover {
+            border-color: #667eea;
+            background: white;
+        }
+
+        .radio-item input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .radio-item input[type="radio"]:checked + label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .radio-item label {
+            cursor: pointer;
+            margin: 0;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .explanation-box {
+            margin-top: 15px;
+        }
+
+        .explanation-box textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .explanation-box textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .explanation-label {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #e2e8f0;
+        }
+
+        .overall-score {
+            font-size: 64px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 20px 0;
+        }
+
+        .score-label {
+            font-size: 18px;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .principle-result {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .principle-result.strong {
+            border-left-color: #10b981;
+        }
+
+        .principle-result.moderate {
+            border-left-color: #f59e0b;
+        }
+
+        .principle-result.needs-attention {
+            border-left-color: #ef4444;
+        }
+
+        .principle-result h3 {
+            font-size: 20px;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+
+        .principle-score {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .principle-result.strong .principle-score {
+            color: #10b981;
+        }
+
+        .principle-result.moderate .principle-score {
+            color: #f59e0b;
+        }
+
+        .principle-result.needs-attention .principle-score {
+            color: #ef4444;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .status-badge.strong {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.moderate {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-badge.needs-attention {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .recommendations {
+            margin-top: 15px;
+        }
+
+        .recommendations h4 {
+            font-size: 16px;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .recommendations li {
+            padding: 8px 0 8px 24px;
+            position: relative;
+            color: #4a5568;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .recommendations li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .product-summary {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .product-summary h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .product-summary p {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .product-summary strong {
+            color: #2d3748;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .btn-group {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 24px;
+            }
+            .header {
+                padding: 30px 24px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+            .radio-group {
+                flex-direction: column;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid #ef4444;
+        }
+
+        .attribution-footer {
+            background: #f7fafc;
+            border-top: 2px solid #e2e8f0;
+            padding: 20px 40px;
+            margin-top: 40px;
+            font-size: 12px;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .attribution-footer h4 {
+            font-size: 13px;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .attribution-footer p {
+            margin-bottom: 6px;
+        }
+
+        .attribution-footer strong {
+            color: #2d3748;
+        }
+
+        .attribution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .attribution-section {
+            margin-bottom: 12px;
+        }
+
+        @media print {
+            .attribution-footer {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AgeTech Design Assessment Tool</h1>
+            <p>Evaluate your product against evidence-based approaches for aging-inclusive technology</p>
+        </div>
+
+        <!-- Page 1: Product Information -->
+        <div id="page1" class="content">
+            <div class="form-group">
+                <label for="productName">Product Name *</label>
+                <input type="text" id="productName" placeholder="Enter your product name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="productDescription">Product Description *</label>
+                <textarea id="productDescription" placeholder="Briefly describe what your product does and who it's for..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="productStage">Product Stage *</label>
+                <select id="productStage" required>
+                    <option value="">Select your product's current stage</option>
+                    <option value="IDEA">Concept/Idea</option>
+                    <option value="DESIGN">Design/Prototyping</option>
+                    <option value="MVP">MVP/Beta</option>
+                    <option value="LAUNCHED">Launched/Mature</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Primary Industry (select all that apply) *</label>
+                <p class="help-text">Select all industries your product operates in</p>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ind-health" value="HEALTH">
+                        <label for="ind-health">Health & Wellness</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ind-social" value="SOCIAL">
+                        <label for="ind-social">Social Connection</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ind-learning" value="LEARNING">
+                        <label for="ind-learning">Learning & Skill Development</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ind-financial" value="FINANCIAL">
+                        <label for="ind-financial">Financial Services</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ind-entertainment" value="ENTERTAINMENT">
+                        <label for="ind-entertainment">Entertainment & Media</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ind-care" value="CARE">
+                        <label for="ind-care">Care Coordination</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ind-smarthome" value="SMARTHOME">
+                        <label for="ind-smarthome">Smart Home & Daily Living</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ind-other" value="OTHER">
+                        <label for="ind-other">Other</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Which aspects of wellbeing does your product address? (select all that apply) *</label>
+                <p class="help-text">This helps us show only relevant questions about wellbeing domains</p>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wb-physical" value="PHYSICAL">
+                        <label for="wb-physical">Physical health</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wb-cognitive" value="COGNITIVE">
+                        <label for="wb-cognitive">Cognitive/mental health</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wb-social" value="SOCIAL_WB">
+                        <label for="wb-social">Social connection</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wb-purpose" value="PURPOSE">
+                        <label for="wb-purpose">Purpose/meaningful engagement</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Which design aspects do you want to assess your product on? (select at least one) *</label>
+                <p class="help-text">Select the big ideas most relevant to your current development focus</p>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="principle-p1" value="P1">
+                        <label for="principle-p1">Learning Infrastructure</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="principle-p2" value="P2">
+                        <label for="principle-p2">Agency & Autonomy</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="principle-p3" value="P3">
+                        <label for="principle-p3">Holistic Wellbeing</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="principle-p4" value="P4">
+                        <label for="principle-p4">Meaningful Engagement</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="principle-p5" value="P5">
+                        <label for="principle-p5">Adaptation & Accessibility</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="error-container"></div>
+
+            <div class="btn-group">
+                <div></div>
+                <button class="btn btn-primary" onclick="startAssessment()">Start Assessment</button>
+            </div>
+        </div>
+
+        <!-- Page 2: Assessment Questions -->
+        <div id="page2" class="content hidden">
+            <div class="progress-text" id="progressText">Question 1 of X</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+
+            <div class="question-card" id="questionCard">
+                <div class="question-text" id="questionText"></div>
+                <div class="radio-group" id="answerOptions"></div>
+                <div class="explanation-box hidden" id="explanationBox">
+                    <label class="explanation-label">Optional: Explain how (helps with recommendations)</label>
+                    <textarea id="explanationText" placeholder="Describe how your product addresses this..."></textarea>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="previousQuestion()" id="prevBtn">Previous</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn">Next</button>
+            </div>
+        </div>
+
+        <!-- Page 3: Results -->
+        <div id="page3" class="content hidden">
+            <div class="results-header">
+                <h2 class="score-label">Overall Assessment Score</h2>
+                <div class="overall-score" id="overallScore">0%</div>
+                <p class="score-label" id="scoreDescription">Score based on selected principles</p>
+            </div>
+
+            <div class="product-summary" id="productSummary"></div>
+
+            <div id="principleResults"></div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="window.print()">Print Results</button>
+                <button class="btn btn-primary" onclick="restartAssessment()">Start New Assessment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="attribution-footer">
+        <h4>Research Attribution</h4>
+        
+        <div class="attribution-section" style="margin-top: 12px;">
+            <p><strong>Sneha Wadhwa</strong><br>
+            Master's Candidate, Learning Design, Innovation & Technology<br>
+            Harvard Graduate School of Education</p>
+        </div>
+        
+        <div class="attribution-section">
+            <p>Developed as project work for <em>Impact by Design</em> course at Harvard Graduate School of Education</p>
+        </div>
+        
+        <div class="attribution-section">
+            <p><strong>Instructed by:</strong><br>
+            David Dockterman, Lecturer on Education<br>
+            Harvard Graduate School of Education</p>
+        </div>
+        
+        <div class="attribution-section">
+            <p><strong>Mentored by:</strong> Annette R. Change, Senior Lead Product Manager, Cox Automotive Inc.</p>
+        </div>
+        
+        <div class="attribution-section">
+            <p><strong>Expert Contributors:</strong> Brittne Kakulla, PhD (AARP) • Nathaniel Farouz (Sindora Keppel Senior) • Neil D'Souza (GetSetUp)</p>
+        </div>
+        
+        <div class="attribution-section">
+            <p><strong>Research Methodology:</strong> Expert interviews • Literature review • Challenge mapping • Design thinking • Direct interviews with senior adults</p>
+        </div>
+    </div>
+
+    <script>
+        // Question Bank with all data
+        const questionBank = [
+            // PRINCIPLE 1: Learning Infrastructure
+            { id: "1.1", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Do you plan to ask users about their personal goals or what they want to achieve?",
+                  DESIGN: "Does your design include asking users about their personal goals or what they want to achieve?",
+                  MVP: "Does your product ask users about their personal goals or what they want to achieve?",
+                  LAUNCHED: "Does your product ask users about their personal goals or what they want to achieve?"
+              }
+            },
+            { id: "1.2", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product allow users to try features in a safe, practice mode where mistakes don't have real consequences?",
+                  DESIGN: "Will your product allow users to try features in a safe, practice mode where mistakes don't have real consequences?",
+                  MVP: "Does your product allow users to try features in a safe, practice mode where mistakes don't have real consequences?",
+                  LAUNCHED: "Does your product allow users to try features in a safe, practice mode where mistakes don't have real consequences?"
+              }
+            },
+            { id: "1.3", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product allow users to repeat actions or revisit content to build familiarity?",
+                  DESIGN: "Will your product allow users to repeat actions or revisit content to build familiarity?",
+                  MVP: "Does your product allow users to repeat actions or revisit content to build familiarity?",
+                  LAUNCHED: "Does your product allow users to repeat actions or revisit content to build familiarity?"
+              }
+            },
+            { id: "1.4", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Do you plan to celebrate small wins with encouraging messages?",
+                  DESIGN: "Will your product celebrate small wins with encouraging messages?",
+                  MVP: "Does your product celebrate small wins with encouraging messages?",
+                  LAUNCHED: "Does your product celebrate small wins with encouraging messages?"
+              }
+            },
+            { id: "1.5", principle: "P1", stage: ["MVP", "LAUNCHED"], industry: ["SOCIAL", "LEARNING", "ENTERTAINMENT", "CARE"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to share their achievements with family or friends?",
+                  DESIGN: "Will users be able to share their achievements with family or friends?",
+                  MVP: "Can users share their achievements with family or friends?",
+                  LAUNCHED: "Can users share their achievements with family or friends?"
+              }
+            },
+            { id: "1.6", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will each screen show one main action or focus?",
+                  DESIGN: "Does each screen in your design show one main action or focus?",
+                  MVP: "Does each screen show one main action or focus?",
+                  LAUNCHED: "Does each screen show one main action or focus?"
+              }
+            },
+            { id: "1.7", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product give users clear feedback when they complete an action?",
+                  DESIGN: "Will your product give users clear feedback when they complete an action?",
+                  MVP: "Does your product give users clear feedback when they complete an action?",
+                  LAUNCHED: "Does your product give users clear feedback when they complete an action?"
+              }
+            },
+            { id: "1.8", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "For important actions, will your product ask users to confirm before proceeding?",
+                  DESIGN: "For important actions, will your product ask users to confirm before proceeding?",
+                  MVP: "For important actions, does your product ask users to confirm before proceeding?",
+                  LAUNCHED: "For important actions, does your product ask users to confirm before proceeding?"
+              }
+            },
+            { id: "1.9", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product use interactions that feel familiar to users?",
+                  DESIGN: "Will your product use interactions that feel familiar to users, rather than requiring them to learn completely new ways of doing things?",
+                  MVP: "Does your product use interactions that feel familiar to users, rather than requiring them to learn completely new ways of doing things?",
+                  LAUNCHED: "Does your product use interactions that feel familiar to users, rather than requiring them to learn completely new ways of doing things?"
+              }
+            },
+            { id: "1.10", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to accomplish their main tasks without switching between multiple apps?",
+                  DESIGN: "Will users be able to accomplish their main tasks without switching between multiple apps or platforms?",
+                  MVP: "Can users accomplish their main tasks without switching between multiple apps or platforms?",
+                  LAUNCHED: "Can users accomplish their main tasks without switching between multiple apps or platforms?"
+              }
+            },
+            { id: "1.11", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product work with tools users already use?",
+                  DESIGN: "Will your product work with tools users already use?",
+                  MVP: "Does your product work with tools users already use?",
+                  LAUNCHED: "Does your product work with tools users already use?"
+              }
+            },
+            { id: "1.12", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["HEALTH", "CARE", "SMARTHOME"], wellbeing: null,
+              text: {
+                  IDEA: "If multiple family members will use the product, will they be able to share one account or easily switch between profiles?",
+                  DESIGN: "If multiple family members will use the product, will they be able to share one account or easily switch between profiles?",
+                  MVP: "If multiple family members use the product, can they share one account or easily switch between profiles?",
+                  LAUNCHED: "If multiple family members use the product, can they share one account or easily switch between profiles?"
+              }
+            },
+            { id: "1.13", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your onboarding explain in plain language what the product does, why users would want it, and how they stay in control?",
+                  DESIGN: "Will your onboarding explain in plain language what the product does, why users would want it, and how they stay in control?",
+                  MVP: "Does your onboarding explain in plain language what the product does, why users would want it, and how they stay in control?",
+                  LAUNCHED: "Does your onboarding explain in plain language what the product does, why users would want it, and how they stay in control?"
+              }
+            },
+            { id: "1.14", principle: "P1", stage: ["MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "When you add new features, will you explain what changed and why it matters?",
+                  DESIGN: "When you add new features, will you explain what changed and why it matters?",
+                  MVP: "When you add new features or updates, do you explain what changed and why it matters?",
+                  LAUNCHED: "When you add new features or updates, do you explain what changed and why it matters?"
+              }
+            },
+            { id: "1.15", principle: "P1", stage: ["MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will buttons and menus stay in the same place across updates?",
+                  DESIGN: "Will buttons and menus stay in the same place across updates?",
+                  MVP: "Do buttons and menus stay in the same place across updates?",
+                  LAUNCHED: "Do buttons and menus stay in the same place across updates?"
+              }
+            },
+            { id: "1.16", principle: "P1", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will privacy settings and data usage be explained in plain language?",
+                  DESIGN: "Will privacy settings and data usage be explained in plain language without technical jargon?",
+                  MVP: "Are privacy settings and data usage explained in plain language without technical jargon?",
+                  LAUNCHED: "Are privacy settings and data usage explained in plain language without technical jargon?"
+              }
+            },
+
+            // PRINCIPLE 2: Agency & Autonomy
+            { id: "2.1", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to control who sees their data and what information is shared?",
+                  DESIGN: "Will users be able to control who sees their data and what information is shared?",
+                  MVP: "Can users control who sees their data and what information is shared?",
+                  LAUNCHED: "Can users control who sees their data and what information is shared?"
+              }
+            },
+            { id: "2.2", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to set their own goals, rather than following pre-set goals?",
+                  DESIGN: "Will users be able to set their own goals in the product, rather than following pre-set goals?",
+                  MVP: "Can users set their own goals in the product, rather than following pre-set goals?",
+                  LAUNCHED: "Can users set their own goals in the product, rather than following pre-set goals?"
+              }
+            },
+            { id: "2.3", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to explore features on their own without being forced through a fixed tutorial?",
+                  DESIGN: "Will users be able to explore features on their own without being forced through a fixed tutorial?",
+                  MVP: "Can users explore features on their own without being forced through a fixed tutorial?",
+                  LAUNCHED: "Can users explore features on their own without being forced through a fixed tutorial?"
+              }
+            },
+            { id: "2.4", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product explain how it works in clear terms?",
+                  DESIGN: "Will your product explain how it works in clear terms so users understand what's happening?",
+                  MVP: "Does your product explain how it works in clear terms so users understand what's happening?",
+                  LAUNCHED: "Does your product explain how it works in clear terms so users understand what's happening?"
+              }
+            },
+            { id: "2.5", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product be designed for the older adult to use themselves, rather than for someone else to use on their behalf?",
+                  DESIGN: "Is your product designed for the older adult to use themselves, rather than for someone else to use on their behalf?",
+                  MVP: "Is your product designed for the older adult to use themselves, rather than for someone else to use on their behalf?",
+                  LAUNCHED: "Is your product designed for the older adult to use themselves, rather than for someone else to use on their behalf?"
+              }
+            },
+            { id: "2.6", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["HEALTH", "CARE", "SMARTHOME"], wellbeing: null,
+              text: {
+                  IDEA: "If your product will involve caregivers or family, will the older adult be able to control what those people can see or do?",
+                  DESIGN: "If your product will involve caregivers or family members, will the older adult be able to control what those people can see or do?",
+                  MVP: "If your product involves caregivers or family members, can the older adult control what those people can see or do?",
+                  LAUNCHED: "If your product involves caregivers or family members, can the older adult control what those people can see or do?"
+              }
+            },
+            { id: "2.7", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["HEALTH", "SOCIAL", "CARE", "SMARTHOME"], wellbeing: null,
+              text: {
+                  IDEA: "If your product will collect data about user activity, will that information be shown to the user first?",
+                  DESIGN: "If your product will collect data about user activity or behavior, will that information be shown to the user first before being shared with others?",
+                  MVP: "If your product collects data about user activity or behavior, is that information shown to the user first before being shared with others?",
+                  LAUNCHED: "If your product collects data about user activity or behavior, is that information shown to the user first before being shared with others?"
+              }
+            },
+            { id: "2.8", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["HEALTH", "CARE", "SMARTHOME"], wellbeing: null,
+              text: {
+                  IDEA: "If your product will monitor user activity, will it provide insights that help users make their own decisions?",
+                  DESIGN: "If your product will monitor user activity, will it provide insights that help users make their own decisions, rather than just alerting others?",
+                  MVP: "If your product monitors user activity, does it provide insights that help users make their own decisions, rather than just alerting others?",
+                  LAUNCHED: "If your product monitors user activity, does it provide insights that help users make their own decisions, rather than just alerting others?"
+              }
+            },
+            { id: "2.9", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["SOCIAL", "LEARNING", "ENTERTAINMENT", "CARE"], wellbeing: "PURPOSE",
+              text: {
+                  IDEA: "Will users be able to share their knowledge, stories, or experience with others?",
+                  DESIGN: "Will users be able to share their knowledge, stories, or experience with others?",
+                  MVP: "Can users share their knowledge, stories, or experience with others?",
+                  LAUNCHED: "Can users share their knowledge, stories, or experience with others?"
+              }
+            },
+            { id: "2.10", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["SOCIAL", "LEARNING", "ENTERTAINMENT", "CARE"], wellbeing: "SOCIAL_WB",
+              text: {
+                  IDEA: "Will your product connect users with family members or people from different generations?",
+                  DESIGN: "Will your product connect users with family members or people from different generations?",
+                  MVP: "Does your product connect users with family members or people from different generations?",
+                  LAUNCHED: "Does your product connect users with family members or people from different generations?"
+              }
+            },
+            { id: "2.11", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["SOCIAL", "LEARNING", "ENTERTAINMENT"], wellbeing: "PURPOSE",
+              text: {
+                  IDEA: "Will your product recognize or celebrate users' achievements?",
+                  DESIGN: "Will your product recognize or celebrate users' achievements in ways they can feel proud of?",
+                  MVP: "Does your product recognize or celebrate users' achievements in ways they can feel proud of?",
+                  LAUNCHED: "Does your product recognize or celebrate users' achievements in ways they can feel proud of?"
+              }
+            },
+            { id: "2.12", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Do you plan to involve adults age 55+ in making decisions about what features to build and how they should work?",
+                  DESIGN: "Have you involved adults age 55+ in making decisions about what features to build and how they should work?",
+                  MVP: "Have you involved adults age 55+ in making decisions about what features to build and how they should work?",
+                  LAUNCHED: "Have you involved adults age 55+ in making decisions about what features to build and how they should work?"
+              }
+            },
+            { id: "2.13", principle: "P2", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Do you plan to regularly test your product with older adults?",
+                  DESIGN: "Do you regularly test your product with older adults before releasing new features?",
+                  MVP: "Do you regularly test your product with older adults before releasing new features?",
+                  LAUNCHED: "Do you regularly test your product with older adults before releasing new features?"
+              }
+            },
+
+            // PRINCIPLE 3: Holistic Wellbeing
+            { id: "3.1", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["HEALTH", "CARE", "SMARTHOME"], wellbeing: "PHYSICAL",
+              text: {
+                  IDEA: "Will your product support physical health in ways that align with users' personal health goals?",
+                  DESIGN: "Will your product support physical health in ways that align with users' personal health goals?",
+                  MVP: "Does your product support physical health in ways that align with users' personal health goals?",
+                  LAUNCHED: "Does your product support physical health in ways that align with users' personal health goals?"
+              }
+            },
+            { id: "3.2", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["LEARNING", "HEALTH", "ENTERTAINMENT", "FINANCIAL"], wellbeing: "COGNITIVE",
+              text: {
+                  IDEA: "Will your product offer mental stimulation or learning opportunities?",
+                  DESIGN: "Will your product offer mental stimulation or learning opportunities that keep users cognitively engaged?",
+                  MVP: "Does your product offer mental stimulation or learning opportunities that keep users cognitively engaged?",
+                  LAUNCHED: "Does your product offer mental stimulation or learning opportunities that keep users cognitively engaged?"
+              }
+            },
+            { id: "3.3", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["SOCIAL", "LEARNING", "ENTERTAINMENT", "CARE"], wellbeing: "SOCIAL_WB",
+              text: {
+                  IDEA: "Will your product create opportunities for genuine two-way connection with others?",
+                  DESIGN: "Will your product create opportunities for genuine two-way connection with others?",
+                  MVP: "Does your product create opportunities for genuine two-way connection with others?",
+                  LAUNCHED: "Does your product create opportunities for genuine two-way connection with others?"
+              }
+            },
+            { id: "3.4", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["SOCIAL", "LEARNING", "ENTERTAINMENT", "CARE"], wellbeing: "PURPOSE",
+              text: {
+                  IDEA: "Will your product help users engage in activities that feel meaningful to them?",
+                  DESIGN: "Will your product help users engage in activities that feel meaningful to them?",
+                  MVP: "Does your product help users engage in activities that feel meaningful to them?",
+                  LAUNCHED: "Does your product help users engage in activities that feel meaningful to them?"
+              }
+            },
+            { id: "3.5", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: "ALL",
+              text: {
+                  IDEA: "If your product will focus on one area of wellbeing, will it also support at least one other area?",
+                  DESIGN: "If your product will focus on one area of wellbeing, will it also support at least one other area?",
+                  MVP: "If your product focuses on one area of wellbeing, does it also support at least one other area?",
+                  LAUNCHED: "If your product focuses on one area of wellbeing, does it also support at least one other area?"
+              }
+            },
+            { id: "3.6", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["SOCIAL", "LEARNING", "ENTERTAINMENT", "CARE"], wellbeing: "SOCIAL_WB",
+              text: {
+                  IDEA: "Will your product enable users to connect with people from different age groups?",
+                  DESIGN: "Will your product enable users to connect with people from different age groups?",
+                  MVP: "Does your product enable users to connect with people from different age groups?",
+                  LAUNCHED: "Does your product enable users to connect with people from different age groups?"
+              }
+            },
+            { id: "3.7", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["SOCIAL", "LEARNING", "ENTERTAINMENT"], wellbeing: "SOCIAL_WB",
+              text: {
+                  IDEA: "Will users be able to feel a sense of presence or connection with others without being required to actively participate?",
+                  DESIGN: "Will users be able to feel a sense of presence or connection with others without being required to actively participate?",
+                  MVP: "Can users feel a sense of presence or connection with others without being required to actively participate?",
+                  LAUNCHED: "Can users feel a sense of presence or connection with others without being required to actively participate?"
+              }
+            },
+            { id: "3.8", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["SOCIAL", "LEARNING", "ENTERTAINMENT", "CARE"], wellbeing: "SOCIAL_WB",
+              text: {
+                  IDEA: "Will users be able to participate at different levels, from just observing to fully engaging?",
+                  DESIGN: "Will users be able to participate at different levels, from just observing to fully engaging?",
+                  MVP: "Can users participate at different levels, from just observing to fully engaging?",
+                  LAUNCHED: "Can users participate at different levels, from just observing to fully engaging?"
+              }
+            },
+            { id: "3.9", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["SOCIAL", "LEARNING", "ENTERTAINMENT", "CARE"], wellbeing: "SOCIAL_WB",
+              text: {
+                  IDEA: "Will your product help users find others with similar interests or experiences?",
+                  DESIGN: "Will your product help users find others with similar interests or experiences?",
+                  MVP: "Does your product help users find others with similar interests or experiences?",
+                  LAUNCHED: "Does your product help users find others with similar interests or experiences?"
+              }
+            },
+            { id: "3.10", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product make users feel capable and valued, not just safe and protected?",
+                  DESIGN: "Will your product make users feel capable and valued, not just safe and protected?",
+                  MVP: "Does your product make users feel capable and valued, not just safe and protected?",
+                  LAUNCHED: "Does your product make users feel capable and valued, not just safe and protected?"
+              }
+            },
+            { id: "3.11", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product work for people with different economic situations or living contexts?",
+                  DESIGN: "Will your product work for people with different economic situations or living contexts?",
+                  MVP: "Does your product work for people with different economic situations or living contexts?",
+                  LAUNCHED: "Does your product work for people with different economic situations or living contexts?"
+              }
+            },
+            { id: "3.12", principle: "P3", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product respect different cultural approaches to aging and technology?",
+                  DESIGN: "Will your product respect different cultural approaches to aging and technology?",
+                  MVP: "Does your product respect different cultural approaches to aging and technology?",
+                  LAUNCHED: "Does your product respect different cultural approaches to aging and technology?"
+              }
+            },
+
+            // PRINCIPLE 4: Meaningful Engagement
+            { id: "4.1", principle: "P4", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to easily pause and return without losing their place?",
+                  DESIGN: "Will users be able to easily pause and return to the product without losing their place or facing guilt messages?",
+                  MVP: "Can users easily pause and return to the product without losing their place or facing guilt messages?",
+                  LAUNCHED: "Can users easily pause and return to the product without losing their place or facing guilt messages?"
+              }
+            },
+            { id: "4.2", principle: "P4", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product offer scheduled content or activities users can plan around?",
+                  DESIGN: "Will your product offer scheduled content or activities that users can plan around, rather than unpredictable notifications?",
+                  MVP: "Does your product offer scheduled content or activities that users can plan around, rather than unpredictable notifications?",
+                  LAUNCHED: "Does your product offer scheduled content or activities that users can plan around, rather than unpredictable notifications?"
+              }
+            },
+            { id: "4.3", principle: "P4", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to control when and how often they receive notifications?",
+                  DESIGN: "Will users be able to control when and how often they receive notifications?",
+                  MVP: "Can users control when and how often they receive notifications?",
+                  LAUNCHED: "Can users control when and how often they receive notifications?"
+              }
+            },
+            { id: "4.4", principle: "P4", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["LEARNING", "ENTERTAINMENT"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to revisit or rewatch content easily?",
+                  DESIGN: "Will users be able to revisit or rewatch content easily?",
+                  MVP: "Can users revisit or rewatch content easily?",
+                  LAUNCHED: "Can users revisit or rewatch content easily?"
+              }
+            },
+            { id: "4.5", principle: "P4", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product help users achieve their own goals, not goals the product imposes?",
+                  DESIGN: "Will your product help users achieve their own goals, not goals the product imposes?",
+                  MVP: "Does your product help users achieve their own goals, not goals the product imposes?",
+                  LAUNCHED: "Does your product help users achieve their own goals, not goals the product imposes?"
+              }
+            },
+            { id: "4.6", principle: "P4", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product avoid manipulative tactics to keep users engaged longer than they intend?",
+                  DESIGN: "Will your product avoid manipulative tactics to keep users engaged longer than they intend?",
+                  MVP: "Does your product avoid manipulative tactics to keep users engaged longer than they intend?",
+                  LAUNCHED: "Does your product avoid manipulative tactics to keep users engaged longer than they intend?"
+              }
+            },
+            { id: "4.7", principle: "P4", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product focus on meaningful outcomes, not just keeping users busy?",
+                  DESIGN: "Will your product focus on meaningful outcomes for users, not just keeping them busy?",
+                  MVP: "Does your product focus on meaningful outcomes for users, not just keeping them busy?",
+                  LAUNCHED: "Does your product focus on meaningful outcomes for users, not just keeping them busy?"
+              }
+            },
+            { id: "4.8", principle: "P4", stage: ["MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will using your product make users feel they've accomplished something worthwhile?",
+                  DESIGN: "Will using your product make users feel they've accomplished something worthwhile?",
+                  MVP: "Does using your product make users feel they've accomplished something worthwhile?",
+                  LAUNCHED: "Does using your product make users feel they've accomplished something worthwhile?"
+              }
+            },
+
+            // PRINCIPLE 5: Adaptation & Accessibility
+            { id: "5.1", principle: "P5", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to adjust interface settings as their needs change over time?",
+                  DESIGN: "Will users be able to adjust interface settings as their needs change over time?",
+                  MVP: "Can users adjust interface settings as their needs change over time?",
+                  LAUNCHED: "Can users adjust interface settings as their needs change over time?"
+              }
+            },
+            { id: "5.2", principle: "P5", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to switch between different ways of interacting, like visual, voice, or touch?",
+                  DESIGN: "Will users be able to switch between different ways of interacting with your product, like visual, voice, or touch?",
+                  MVP: "Can users switch between different ways of interacting with your product, like visual, voice, or touch?",
+                  LAUNCHED: "Can users switch between different ways of interacting with your product, like visual, voice, or touch?"
+              }
+            },
+            { id: "5.3", principle: "P5", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "If a user's abilities change, will they still be able to use core features?",
+                  DESIGN: "If a user's abilities change, will they still be able to use core features?",
+                  MVP: "If a user's abilities change, can they still use core features?",
+                  LAUNCHED: "If a user's abilities change, can they still use core features?"
+              }
+            },
+            { id: "5.4", principle: "P5", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product emphasize helping users achieve what they want, rather than focusing on their limitations?",
+                  DESIGN: "Will your product emphasize helping users achieve what they want, rather than focusing on their limitations?",
+                  MVP: "Does your product emphasize helping users achieve what they want, rather than focusing on their limitations?",
+                  LAUNCHED: "Does your product emphasize helping users achieve what they want, rather than focusing on their limitations?"
+              }
+            },
+            { id: "5.5", principle: "P5", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to adjust text size, brightness, or contrast?",
+                  DESIGN: "Will users be able to adjust text size, brightness, or contrast?",
+                  MVP: "Can users adjust text size, brightness, or contrast?",
+                  LAUNCHED: "Can users adjust text size, brightness, or contrast?"
+              }
+            },
+            { id: "5.6", principle: "P5", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will buttons and touch areas be large enough for users with limited dexterity?",
+                  DESIGN: "Will buttons and touch areas be large enough for users with limited dexterity?",
+                  MVP: "Are buttons and touch areas large enough for users with limited dexterity?",
+                  LAUNCHED: "Are buttons and touch areas large enough for users with limited dexterity?"
+              }
+            },
+            { id: "5.7", principle: "P5", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to complete important tasks using voice commands?",
+                  DESIGN: "Will users be able to complete important tasks using voice commands instead of typing or tapping?",
+                  MVP: "Can users complete important tasks using voice commands instead of typing or tapping?",
+                  LAUNCHED: "Can users complete important tasks using voice commands instead of typing or tapping?"
+              }
+            },
+            { id: "5.8", principle: "P5", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product keep information visible rather than requiring users to remember it?",
+                  DESIGN: "Will your product keep information visible on screen rather than requiring users to remember it?",
+                  MVP: "Does your product keep information visible on screen rather than requiring users to remember it?",
+                  LAUNCHED: "Does your product keep information visible on screen rather than requiring users to remember it?"
+              }
+            },
+            { id: "5.9", principle: "P5", stage: ["MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will your product learn users' preferences over time?",
+                  DESIGN: "Will your product learn users' preferences over time?",
+                  MVP: "Does your product learn users' preferences over time?",
+                  LAUNCHED: "Does your product learn users' preferences over time?"
+              }
+            },
+            { id: "5.10", principle: "P5", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will user settings and preferences be saved between sessions?",
+                  DESIGN: "Will user settings and preferences be saved between sessions?",
+                  MVP: "Are user settings and preferences saved between sessions?",
+                  LAUNCHED: "Are user settings and preferences saved between sessions?"
+              }
+            },
+            { id: "5.11", principle: "P5", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to adjust how much help or guidance they receive?",
+                  DESIGN: "Will users be able to adjust how much help or guidance they receive?",
+                  MVP: "Can users adjust how much help or guidance they receive?",
+                  LAUNCHED: "Can users adjust how much help or guidance they receive?"
+              }
+            },
+            { id: "5.12", principle: "P5", stage: ["IDEA", "DESIGN", "MVP", "LAUNCHED"], industry: ["ALL"], wellbeing: null,
+              text: {
+                  IDEA: "Will users be able to turn off features they don't find helpful?",
+                  DESIGN: "Will users be able to turn off features they don't find helpful?",
+                  MVP: "Can users turn off features they don't find helpful?",
+                  LAUNCHED: "Can users turn off features they don't find helpful?"
+              }
+            }
+        ];
+
+        // Global state
+        let assessmentData = {
+            productName: '',
+            productDescription: '',
+            productStage: '',
+            industries: [],
+            wellbeing: [],
+            principles: [],
+            currentQuestionIndex: 0,
+            filteredQuestions: [],
+            answers: {},
+            explanations: {}
+        };
+
+        // Big Idea names for display
+        const principleNames = {
+            'P1': 'Learning Infrastructure',
+            'P2': 'Agency & Autonomy',
+            'P3': 'Holistic Wellbeing',
+            'P4': 'Meaningful Engagement',
+            'P5': 'Adaptation & Accessibility'
+        };
+
+        function startAssessment() {
+            // Validate inputs
+            const productName = document.getElementById('productName').value.trim();
+            const productDescription = document.getElementById('productDescription').value.trim();
+            const productStage = document.getElementById('productStage').value;
+
+            if (!productName || !productDescription || !productStage) {
+                showError('Please fill in all required fields.');
+                return;
+            }
+
+            // Get selected industries
+            const industries = [];
+            document.querySelectorAll('input[type="checkbox"][id^="ind-"]:checked').forEach(cb => {
+                industries.push(cb.value);
+            });
+
+            if (industries.length === 0) {
+                showError('Please select at least one industry.');
+                return;
+            }
+
+            // Get selected wellbeing domains
+            const wellbeing = [];
+            document.querySelectorAll('input[type="checkbox"][id^="wb-"]:checked').forEach(cb => {
+                wellbeing.push(cb.value);
+            });
+
+            if (wellbeing.length === 0) {
+                showError('Please select at least one wellbeing domain.');
+                return;
+            }
+
+            // Get selected principles
+            const principles = [];
+            document.querySelectorAll('input[type="checkbox"][id^="principle-"]:checked').forEach(cb => {
+                principles.push(cb.value);
+            });
+
+            if (principles.length === 0) {
+                showError('Please select at least one big idea to assess.');
+                return;
+            }
+
+            // Store data
+            assessmentData.productName = productName;
+            assessmentData.productDescription = productDescription;
+            assessmentData.productStage = productStage;
+            assessmentData.industries = industries;
+            assessmentData.wellbeing = wellbeing;
+            assessmentData.principles = principles;
+
+            // Filter questions
+            filterQuestions();
+
+            if (assessmentData.filteredQuestions.length === 0) {
+                showError('No questions available for your selection. Please adjust your choices.');
+                return;
+            }
+
+            // Show assessment page
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
+            showQuestion(0);
+        }
+
+        function filterQuestions() {
+            const { productStage, industries, wellbeing, principles } = assessmentData;
+            
+            assessmentData.filteredQuestions = questionBank.filter(q => {
+                // Must be in selected principles
+                if (!principles.includes(q.principle)) return false;
+                
+                // Must be available for this stage
+                if (!q.stage.includes(productStage)) return false;
+                
+                // Check industry filter
+                if (!q.industry.includes('ALL')) {
+                    const hasMatch = q.industry.some(ind => industries.includes(ind));
+                    if (!hasMatch) return false;
+                }
+                
+                // Check wellbeing filter
+                if (q.wellbeing !== null && q.wellbeing !== 'ALL') {
+                    if (!wellbeing.includes(q.wellbeing)) return false;
+                }
+                
+                return true;
+            });
+        }
+
+        function showQuestion(index) {
+            const question = assessmentData.filteredQuestions[index];
+            const stage = assessmentData.productStage;
+            
+            // Update progress
+            document.getElementById('progressText').textContent = 
+                `Question ${index + 1} of ${assessmentData.filteredQuestions.length}`;
+            document.getElementById('progressFill').style.width = 
+                `${((index + 1) / assessmentData.filteredQuestions.length) * 100}%`;
+            
+            // Set question text
+            document.getElementById('questionText').textContent = question.text[stage];
+            
+            // Create answer options
+            const answerOptions = document.getElementById('answerOptions');
+            answerOptions.innerHTML = '';
+            
+            const options = [
+                { value: 2, label: 'Yes' },
+                { value: 1, label: 'Somewhat' },
+                { value: 0, label: 'No' }
+            ];
+            
+            options.forEach(option => {
+                const div = document.createElement('div');
+                div.className = 'radio-item';
+                div.innerHTML = `
+                    <input type="radio" id="answer-${option.value}" name="answer" value="${option.value}">
+                    <label for="answer-${option.value}">${option.label}</label>
+                `;
+                div.onclick = () => {
+                    document.getElementById(`answer-${option.value}`).checked = true;
+                    document.getElementById('explanationBox').classList.remove('hidden');
+                };
+                answerOptions.appendChild(div);
+            });
+            
+            // Restore previous answer if exists
+            if (assessmentData.answers[question.id] !== undefined) {
+                document.querySelector(`input[name="answer"][value="${assessmentData.answers[question.id]}"]`).checked = true;
+                document.getElementById('explanationBox').classList.remove('hidden');
+            } else {
+                document.getElementById('explanationBox').classList.add('hidden');
+            }
+            
+            // Restore explanation if exists
+            document.getElementById('explanationText').value = assessmentData.explanations[question.id] || '';
+            
+            // Update button states
+            document.getElementById('prevBtn').style.visibility = index === 0 ? 'hidden' : 'visible';
+            document.getElementById('nextBtn').textContent = 
+                index === assessmentData.filteredQuestions.length - 1 ? 'View Results' : 'Next';
+        }
+
+        function nextQuestion() {
+            const question = assessmentData.filteredQuestions[assessmentData.currentQuestionIndex];
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            
+            if (!selectedAnswer) {
+                showError('Please select an answer before continuing.');
+                return;
+            }
+            
+            // Save answer and explanation
+            assessmentData.answers[question.id] = parseInt(selectedAnswer.value);
+            assessmentData.explanations[question.id] = document.getElementById('explanationText').value.trim();
+            
+            // Move to next question or show results
+            if (assessmentData.currentQuestionIndex < assessmentData.filteredQuestions.length - 1) {
+                assessmentData.currentQuestionIndex++;
+                showQuestion(assessmentData.currentQuestionIndex);
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (assessmentData.currentQuestionIndex > 0) {
+                assessmentData.currentQuestionIndex--;
+                showQuestion(assessmentData.currentQuestionIndex);
+            }
+        }
+
+        function showResults() {
+            // Calculate scores by principle
+            const principleScores = {};
+            const principleTotals = {};
+            
+            assessmentData.principles.forEach(p => {
+                principleScores[p] = 0;
+                principleTotals[p] = 0;
+            });
+            
+            assessmentData.filteredQuestions.forEach(q => {
+                const answer = assessmentData.answers[q.id] || 0;
+                principleScores[q.principle] += answer;
+                principleTotals[q.principle] += 2; // Max 2 points per question
+            });
+            
+            // Calculate percentages
+            const principlePercentages = {};
+            assessmentData.principles.forEach(p => {
+                principlePercentages[p] = principleTotals[p] > 0 
+                    ? Math.round((principleScores[p] / principleTotals[p]) * 100)
+                    : 0;
+            });
+            
+            // Calculate overall score
+            const totalScore = Object.values(principleScores).reduce((a, b) => a + b, 0);
+            const totalPossible = Object.values(principleTotals).reduce((a, b) => a + b, 0);
+            const overallPercentage = totalPossible > 0 
+                ? Math.round((totalScore / totalPossible) * 100)
+                : 0;
+            
+            // Display overall score
+            document.getElementById('overallScore').textContent = `${overallPercentage}%`;
+            document.getElementById('scoreDescription').textContent = 
+                `Based on ${assessmentData.filteredQuestions.length} questions across ${assessmentData.principles.length} big idea(s)`;
+            
+            // Display product summary
+            const summaryHtml = `
+                <h3>Product Summary</h3>
+                <p><strong>Product:</strong> ${assessmentData.productName}</p>
+                <p><strong>Stage:</strong> ${formatStage(assessmentData.productStage)}</p>
+                <p><strong>Industries:</strong> ${assessmentData.industries.map(i => formatIndustry(i)).join(', ')}</p>
+                <p><strong>Assessed Big Ideas:</strong> ${assessmentData.principles.map(p => principleNames[p]).join(', ')}</p>
+            `;
+            document.getElementById('productSummary').innerHTML = summaryHtml;
+            
+            // Display principle results
+            let resultsHtml = '';
+            assessmentData.principles.forEach(p => {
+                const percentage = principlePercentages[p];
+                const status = percentage >= 80 ? 'strong' : percentage >= 50 ? 'moderate' : 'needs-attention';
+                const statusLabel = percentage >= 80 ? 'Strong' : percentage >= 50 ? 'Moderate' : 'Needs Attention';
+                
+                const recommendations = getRecommendations(p, percentage);
+                
+                resultsHtml += `
+                    <div class="principle-result ${status}">
+                        <h3>${principleNames[p]}</h3>
+                        <div class="status-badge ${status}">${statusLabel}</div>
+                        <div class="principle-score">${percentage}%</div>
+                        ${recommendations.length > 0 ? `
+                            <div class="recommendations">
+                                <h4>Recommendations:</h4>
+                                <ul>
+                                    ${recommendations.map(r => `<li>${r}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            document.getElementById('principleResults').innerHTML = resultsHtml;
+            
+            // Show results page
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('page3').classList.remove('hidden');
+        }
+
+        function getRecommendations(principle, percentage) {
+            const recommendations = {
+                'P1': [
+                    'Frame technology adoption as a learning journey with clear stages',
+                    'Provide low-stakes practice opportunities before high-stakes use',
+                    'Use familiar interaction patterns instead of requiring new paradigms',
+                    'Explain privacy settings in plain language without jargon'
+                ],
+                'P2': [
+                    'Design for the older adult as primary user, not caregivers',
+                    'Enable users to set their own goals rather than following pre-sets',
+                    'Involve adults 55+ in design decisions and testing',
+                    'Provide transparent explanations of how systems work'
+                ],
+                'P3': [
+                    'Address multiple wellbeing domains, not just one',
+                    'Create opportunities for intergenerational connection',
+                    'Design for different levels of participation (passive to active)',
+                    'Make users feel capable and valued, not just safe'
+                ],
+                'P4': [
+                    'Enable graceful exits without guilt or pressure tactics',
+                    'Offer scheduled content users can plan around',
+                    'Focus on meaningful outcomes, not just engagement metrics',
+                    'Avoid manipulative tactics to maximize time-on-platform'
+                ],
+                'P5': [
+                    'Allow interface adjustments as needs change over time',
+                    'Provide multiple interaction modes (visual, voice, touch)',
+                    'Make buttons and touch areas large enough for limited dexterity',
+                    'Keep information visible instead of requiring memory'
+                ]
+            };
+            
+            if (percentage >= 80) {
+                return [`Great work! Continue strengthening this principle across all features.`];
+            } else if (percentage >= 50) {
+                return recommendations[principle].slice(0, 2);
+            } else {
+                return recommendations[principle];
+            }
+        }
+
+        function formatStage(stage) {
+            const stages = {
+                'IDEA': 'Concept/Idea',
+                'DESIGN': 'Design/Prototyping',
+                'MVP': 'MVP/Beta',
+                'LAUNCHED': 'Launched/Mature'
+            };
+            return stages[stage] || stage;
+        }
+
+        function formatIndustry(ind) {
+            const industries = {
+                'HEALTH': 'Health & Wellness',
+                'SOCIAL': 'Social Connection',
+                'LEARNING': 'Learning & Skill Development',
+                'FINANCIAL': 'Financial Services',
+                'ENTERTAINMENT': 'Entertainment & Media',
+                'CARE': 'Care Coordination',
+                'SMARTHOME': 'Smart Home & Daily Living',
+                'OTHER': 'Other'
+            };
+            return industries[ind] || ind;
+        }
+
+        function showError(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
+            setTimeout(() => {
+                errorContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        function restartAssessment() {
+            // Reset all data
+            assessmentData = {
+                productName: '',
+                productDescription: '',
+                productStage: '',
+                industries: [],
+                wellbeing: [],
+                principles: [],
+                currentQuestionIndex: 0,
+                filteredQuestions: [],
+                answers: {},
+                explanations: {}
+            };
+            
+            // Reset form
+            document.getElementById('productName').value = '';
+            document.getElementById('productDescription').value = '';
+            document.getElementById('productStage').value = '';
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            
+            // Show first page
+            document.getElementById('page3').classList.add('hidden');
+            document.getElementById('page1').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

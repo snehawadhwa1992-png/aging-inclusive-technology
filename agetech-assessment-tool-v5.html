@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgeTech Design Principles Assessment</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 30px; text-align: center; position: relative; }
+        .nav-buttons { position: absolute; top: 15px; right: 15px; display: flex; gap: 10px; }
+        .nav-btn { background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.3); padding: 8px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; transition: all 0.2s ease; }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.3); }
+        .header h1 { font-size: 28px; margin-bottom: 10px; font-weight: 600; }
+        .header p { font-size: 16px; opacity: 0.95; }
+        .content { padding: 40px 30px; }
+        .welcome-screen { text-align: center; }
+        .welcome-screen h2 { color: #667eea; margin-bottom: 20px; font-size: 24px; }
+        .question-container { display: none; }
+        .question-container.active { display: block; }
+        .progress-bar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; margin-bottom: 30px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); width: 0%; transition: width 0.3s ease; }
+        .progress-text { text-align: center; color: #666; font-size: 14px; margin-bottom: 20px; }
+        .principle-badge { display: inline-block; background: #f0f0f0; color: #667eea; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 15px; }
+        .approach-name { font-size: 14px; color: #888; margin-bottom: 20px; font-style: italic; }
+        .question { font-size: 18px; font-weight: 500; margin-bottom: 25px; color: #333; line-height: 1.6; }
+        .options { display: flex; flex-direction: column; gap: 12px; }
+        .option { background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: flex-start; gap: 12px; }
+        .option:hover { border-color: #667eea; background: #f0f4ff; }
+        .option.selected { border-color: #667eea; background: #e8efff; }
+        .option input[type="radio"], .option input[type="checkbox"] { margin-top: 4px; cursor: pointer; width: 18px; height: 18px; flex-shrink: 0; }
+        .option-text { flex: 1; font-size: 15px; line-height: 1.5; }
+        .buttons { display: flex; justify-content: space-between; gap: 15px; margin-top: 30px; }
+        button { padding: 14px 28px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; flex: 1; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: white; color: #667eea; border: 2px solid #667eea; }
+        .btn-secondary:hover { background: #f0f4ff; }
+        .results { display: none; }
+        .results.active { display: block; }
+        .overall-score { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px; }
+        .overall-score h2 { font-size: 48px; margin-bottom: 10px; }
+        .overall-score p { font-size: 18px; opacity: 0.95; }
+        .principle-result { background: #f8f9fa; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
+        .principle-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .principle-name { font-size: 18px; font-weight: 600; color: #333; }
+        .status-badge { padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; }
+        .status-strong { background: #d4edda; color: #155724; }
+        .status-moderate { background: #fff3cd; color: #856404; }
+        .status-needs-attention { background: #f8d7da; color: #721c24; }
+        .principle-score { font-size: 24px; color: #667eea; font-weight: 600; margin-bottom: 15px; }
+        .recommendations { background: white; padding: 20px; border-radius: 8px; margin-top: 15px; }
+        .recommendations h4 { color: #667eea; margin-bottom: 12px; font-size: 16px; }
+        .recommendations ul { list-style-position: inside; color: #555; }
+        .recommendations li { margin-bottom: 8px; font-size: 14px; line-height: 1.6; }
+        .aspect-option:hover { border-color: #667eea; background: #f0f4ff; }
+        .aspect-option input:checked { accent-color: #667eea; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; max-width: 400px; text-align: center; }
+        .modal-content h3 { color: #667eea; margin-bottom: 15px; }
+        .modal-content p { margin-bottom: 20px; color: #666; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: center; }
+        .footer { background: #f8f9fa; border-top: 2px solid #e0e0e0; padding: 30px 40px; margin-top: 40px; }
+        .footer h4 { color: #667eea; font-size: 16px; margin-bottom: 15px; font-weight: 600; }
+        .footer .attribution-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .footer .attribution-item { margin-bottom: 12px; }
+        .footer .attribution-label { font-weight: 600; color: #555; font-size: 14px; margin-bottom: 4px; }
+        .footer .attribution-value { color: #666; font-size: 14px; line-height: 1.6; }
+        .footer .full-width { grid-column: 1 / -1; }
+        @media print { body { background: white; padding: 0; } .container { box-shadow: none; } .header { background: #667eea; } button, .nav-buttons { display: none !important; } }
+        @media (max-width: 768px) { .container { border-radius: 0; } .header { padding: 30px 20px; } .header h1 { font-size: 24px; } .content { padding: 30px 20px; } .buttons { flex-direction: column; } .nav-buttons { position: static; justify-content: center; margin-top: 15px; } .footer { padding: 20px; } .footer .attribution-grid { grid-template-columns: 1fr; gap: 15px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="nav-buttons" id="navButtons" style="display: none;">
+                <button class="nav-btn" onclick="confirmReset()">🔄 Reset</button>
+                <button class="nav-btn" onclick="pauseAssessment()">⏸️ Pause</button>
+            </div>
+            <h1>AgeTech Design Principles Assessment</h1>
+            <p>Evidence-based framework derived from research with older adults and experts from the field</p>
+        </div>
+        
+        <div class="content">
+            <div id="welcome" class="welcome-screen">
+                <h2>Welcome to the AgeTech Design Principles Assessment</h2>
+                <p>This tool helps you evaluate how well your AgeTech product aligns with evidence-based design principles for older adults (50+).</p>
+                <div style="text-align: left; max-width: 600px; margin: 30px auto;">
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #333;">1. Product Name <span style="color: #dc3545;">*</span></label>
+                        <input type="text" id="productName" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;" placeholder="Enter your product name">
+                    </div>
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #333;">2. Product Description <span style="color: #dc3545;">*</span></label>
+                        <textarea id="productDescription" rows="4" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; resize: vertical; font-family: inherit;" placeholder="Briefly describe your product, its target users, and primary purpose"></textarea>
+                        <small style="color: #666; font-size: 13px;">This helps us provide more relevant recommendations</small>
+                    </div>
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 12px; color: #333;">3. Design Aspects to Evaluate Today <span style="color: #dc3545;">*</span></label>
+                        <small style="color: #666; font-size: 13px; display: block; margin-bottom: 12px;">Select one or more areas you'd like to assess</small>
+                        <div id="designAspectsContainer" style="display: flex; flex-direction: column; gap: 10px;">
+                            <label class="aspect-option" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <input type="checkbox" class="design-aspect-checkbox" value="Learning Infrastructure" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
+                                <div><strong style="color: #667eea;">Learning Infrastructure</strong><div style="font-size: 13px; color: #666; margin-top: 4px;">Supporting users in building confidence and competence</div></div>
+                            </label>
+                            <label class="aspect-option" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <input type="checkbox" class="design-aspect-checkbox" value="Agency and Autonomy" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
+                                <div><strong style="color: #667eea;">Agency and Autonomy</strong><div style="font-size: 13px; color: #666; margin-top: 4px;">Empowering users with control and self-direction</div></div>
+                            </label>
+                            <label class="aspect-option" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <input type="checkbox" class="design-aspect-checkbox" value="Holistic Wellbeing" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
+                                <div><strong style="color: #667eea;">Holistic Wellbeing</strong><div style="font-size: 13px; color: #666; margin-top: 4px;">Addressing physical, cognitive, social, and purpose dimensions</div></div>
+                            </label>
+                            <label class="aspect-option" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <input type="checkbox" class="design-aspect-checkbox" value="Meaningful Engagement" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
+                                <div><strong style="color: #667eea;">Meaningful Engagement</strong><div style="font-size: 13px; color: #666; margin-top: 4px;">Designing for intrinsic motivation and wellbeing</div></div>
+                            </label>
+                            <label class="aspect-option" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <input type="checkbox" class="design-aspect-checkbox" value="Adaptation, Personalization, and Accessible Interfaces" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer;">
+                                <div><strong style="color: #667eea;">Adaptation, Personalization, and Accessible Interfaces</strong><div style="font-size: 13px; color: #666; margin-top: 4px;">Creating flexible, accessible experiences</div></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="validationError" style="color: #dc3545; margin-bottom: 15px; display: none; font-weight: 500;"></div>
+                <div class="buttons"><button class="btn-primary" onclick="validateAndStart()">Start Assessment</button></div>
+            </div>
+            
+            <div id="questions" class="question-container">
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <div class="progress-text" id="progressText"></div>
+                <div class="principle-badge" id="principleBadge"></div>
+                <div class="approach-name" id="approachName"></div>
+                <div class="question" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+                <div class="buttons">
+                    <button class="btn-secondary" id="prevBtn" onclick="previousQuestion()">Previous</button>
+                    <button class="btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next</button>
+                </div>
+            </div>
+            
+            <div id="results" class="results">
+                <div class="overall-score">
+                    <h2 id="overallScore"></h2>
+                    <p id="overallPercentage"></p>
+                </div>
+                <div id="principleResults"></div>
+                <div class="buttons">
+                    <button class="btn-primary" onclick="window.print()">Print Report</button>
+                    <button class="btn-secondary" onclick="location.reload()">Start New Assessment</button>
+                </div>
+            </div>
+            
+            <!-- Research Attribution Footer -->
+            <div class="footer">
+                <h4>Research Attribution</h4>
+                <div class="attribution-grid">
+                    <div class="attribution-item">
+                        <div class="attribution-label">Researcher & Developer</div>
+                        <div class="attribution-value">
+                            Sneha Wadhwa<br>
+                            Master's Candidate, Learning Design, Innovation & Technology<br>
+                            Harvard Graduate School of Education
+                        </div>
+                    </div>
+                    
+                    <div class="attribution-item">
+                        <div class="attribution-label">Academic Context</div>
+                        <div class="attribution-value">
+                            Developed as project work for Impact by Design course<br>
+                            Harvard Graduate School of Education
+                        </div>
+                    </div>
+                    
+                    <div class="attribution-item">
+                        <div class="attribution-label">Course Instructor</div>
+                        <div class="attribution-value">
+                            David Dockterman<br>
+                            Lecturer on Education<br>
+                            Harvard Graduate School of Education
+                        </div>
+                    </div>
+                    
+                    <div class="attribution-item">
+                        <div class="attribution-label">Mentor</div>
+                        <div class="attribution-value">
+                            Annette R. Change<br>
+                            Senior Lead Product Manager<br>
+                            Cox Automotive Inc.
+                        </div>
+                    </div>
+                    
+                    <div class="attribution-item full-width">
+                        <div class="attribution-label">Expert Contributors</div>
+                        <div class="attribution-value">
+                            Brittne Kakulla, PhD (AARP) • Nathaniel Farouz (Sindora Keppel Senior) • Neil D'Souza (GetSetUp)
+                        </div>
+                    </div>
+                    
+                    <div class="attribution-item full-width">
+                        <div class="attribution-label">Research Methodology</div>
+                        <div class="attribution-value">
+                            Expert interviews • Literature review • Challenge mapping • Design thinking • Direct interviews with senior adults
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="resetModal" class="modal">
+        <div class="modal-content">
+            <h3>Reset Assessment?</h3>
+            <p>This will clear all your answers and return you to the beginning. This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeResetModal()">Cancel</button>
+                <button class="btn-primary" onclick="resetAssessment()">Reset</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="pauseModal" class="modal">
+        <div class="modal-content">
+            <h3>Assessment Paused</h3>
+            <p>Your progress has been saved locally. Click continue to resume, or close this window.</p>
+            <div class="modal-buttons">
+                <button class="btn-primary" onclick="resumeAssessment()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+const assessmentData = {
+    "principles": [
+        {
+            "name": "Learning Infrastructure",
+            "approaches": [
+                {
+                    "name": "Identity-Affirming Design",
+                    "questions": [
+                        {
+                            "num": 1,
+                            "text": "Does your product include a step (e.g., during onboarding or setup) that explicitly asks users about their personal goals or purpose for using the technology?",
+                            "options": [
+                                "a. Yes, it customizes according to the goals",
+                                "b. Somewhat, it asks but doesn't change the expereince",
+                                "c. No, it doesn't ask"
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 2,
+                            "text": "Does the product offer low-stakes exploratory environments (e.g., sandbox, practice mode, guided tour) that build user confidence before requiring actions that affect real data or settings?",
+                            "options": [
+                                "a. Yes, it guides (step by step interaction) or allows users to practice complete a certain action in simulation",
+                                "b. Somewhat (partially available), it shows all the steps but doesn't let the users to follow/practice with steps",
+                                "c. No, the user starts to engage witht the action on its own"
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Learning Through Low-Stakes Practice and Gamification",
+                    "questions": [
+                        {
+                            "num": 3,
+                            "text": "Does your product maintain high consistency in the location, labeling, and sequence of key routine actions across all sections (e.g., \"Back\" buttons, help access, saving/submitting) to support habit formation and reduce cognitive load?",
+                            "options": [
+                                "a. Yes, all the time",
+                                "b. Somewhat, it could vary as per the screen",
+                                "c. No, each screen has a different visual"
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 4,
+                            "text": "Does the product provide clear, encouraging, and timely validation (e.g., visual or auditory confirmation) upon successful completion of a small step or task, reinforcing the user's progress toward their overall goal?",
+                            "options": [
+                                "a. Yes, for all actions",
+                                "b. It covers only landmark stages",
+                                "c. No, it doesn't"
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 5,
+                            "text": "Are users provided with easy and prominent pathways to share or \"boast\" about their achievements (e.g., completed tasks, mastery of a skill) to build their social identity and sense of contribution?",
+                            "options": [
+                                "a. Yes",
+                                "b. Somewhat (partially available)",
+                                "c. No"
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Design Cognitive-Friendly Interaction Layers",
+                    "questions": [
+                        {
+                            "num": 6,
+                            "text": "Are interface screens and views consistently designed to highlight only one primary action or decision point, minimizing visual clutter and reducing the working memory required to process the screen?",
+                            "options": [
+                                "a. \tYes, for core tasks, the screen limits the user to one clear primary action. (e.g., The screen is like a single \"Confirm Payment\" button\u2014all attention is on one task).",
+                                "b. \tSometimes, but screens for core tasks still present more than two competing actions. (e.g., While confirming payment, the app also prominently displays an option to \"Shop More\" or \"Add a Promo Code\" with high visual weight, delaying the final decision).",
+                                "c.\tNo, most screens, including core workflows, are visually dense. (e.g., The interface expects the user to search through many different menus, icons, and information layers)."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 7,
+                            "text": "Does the product provide immediate and unambiguous feedback (e.g., visual confirmation, auditory cue, brief message) after every significant user action to confirm the outcome and prevent uncertainty?",
+                            "options": [
+                                "a.. Yes, users receive instant, clear, and easy-to-understand confirmation for all key actions and data submissions.",
+                                "b. Feedback is often provided, but it is delayed, subtle, or sometimes requires the user to search for confirmation.",
+                                "c. No, users often have to assume or guess whether their action has successfully completed."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 8,
+                            "text": "For all non-reversible or high-stakes actions (e.g., deleting data, monetary transfers), is a confirmation step required that clearly states the consequence, ensuring the user avoids consequential errors?",
+                            "options": [
+                                "a. Yes, a confirmation step is consistently required for all actions that are difficult or impossible to undo, and the consequences are explained.",
+                                "b. Confirmation is required for some major actions, but not consistently applied across all irreversible tasks.",
+                                "c. No, high-stakes actions are often executed immediately without a warning or chance to review."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 9,
+                            "text": "Does the product actively leverage existing, common mental models and interface patterns (e.g., standard menus, familiar gestures) to minimize the need for the user to learn entirely new interaction paradigms?",
+                            "options": [
+                                "a. Yes, we prioritize standard, widely accepted interface conventions and avoid custom, unique interaction models.",
+                                "b. We use familiar models in some areas, but key interactions require learning a new or unique set of steps or gestures.",
+                                "c. No, the product design requires the user to learn entirely new mental models or interactions to be successful."
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Coherent Ecosystems & Plan for Frictionless Entry and Exit",
+                    "questions": [
+                        {
+                            "num": 10,
+                            "text": "Can users accomplish their main tasks without switching between multiple apps or platforms?",
+                            "options": [
+                                "a. Yes, all primary user journeys are contained within the product with no required external app switching.",
+                                "b. Sometimes, but key support or complementary tasks still require switching to a web browser, email, or a separate app.",
+                                "c. No, the product is heavily dependent on the user frequently switching between multiple disconnected applications."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 11,
+                            "text": "Does your product actively support frictionless data sharing and integration with the common tools and platforms (e.g., calendars, communication apps) that senior adults in your target group already use?",
+                            "options": [
+                                "a. Yes, we have robust, two-way integrations with relevant third-party tools used by our senior demographic.",
+                                "b. We offer limited integration (e.g., simple data export), but the system is not fully interoperable with common external tools.",
+                                "c. No, the product operates as a closed system and does not easily integrate with external services."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 12,
+                            "text": "If the product is used by multiple household members (including caregivers or family), does it offer clear, simple, and low-friction methods for switching between user profiles or managing the product collaboratively?",
+                            "options": [
+                                "a. Yes, the design includes dedicated, easy-to-access profile switching or sharing features that clearly delineate user context.",
+                                "b. Shared access is possible, but it requires logging out/in or complex menu navigation, creating friction.",
+                                "c. No, the product is fundamentally designed for a single user and is difficult to share or use with different profiles."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 13,
+                            "text": "Does the design consistently provide clear entry points and exit pathways (e.g., prominent 'Home' button, breadcrumbs, consistent return mechanisms) so users always know their location and how to leave?",
+                            "options": [
+                                "a. Yes, the user's location and options for moving or exiting are always clearly visible on the screen.",
+                                "b. Context is mostly clear, but the product contains deep menus or unusual navigation where users can lose their way.",
+                                "c. No, the product often utilizes full-screen modals or complex navigational structures that obscure the user's location and exit path."
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Trust-Building Through Transparency and Ongoing Support",
+                    "questions": [
+                        {
+                            "num": 14,
+                            "text": "Does your onboarding explain in plain language what the product does, why users would want it, and how they stay in control?",
+                            "options": [
+                                "a. Yes, the initial onboarding includes clear, non-jargon explanations of the product's value proposition, core functions, and user control.",
+                                "b. The onboarding explains what the product does, but is vague on the user's control or long-term value.",
+                                "c. No, the focus is on technical features or steps, not on the user's personal goals or control."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 15,
+                            "text": "When you add new features or updates, do you explain what changed and why it matters?",
+                            "options": [
+                                "a. Yes, all updates include a simple, non-technical overview of what changed and the benefit to the user, not just a list of features.",
+                                "b. We notify users of updates, but the explanation is often technical, sometimes buried in a log, or doesn't explicitily explain why the change matters to them.",
+                                "c. No, updates are often pushed silently or without clear communication of the changes"
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 16,
+                            "text": "Do buttons and menus stay in the same place across updates?",
+                            "options": [
+                                "a. Yes, the location, sequence, and labeling of core navigation and routine actions are immutable across updates to maintain user habit.",
+                                "b. Most core elements are consistent, but menus or buttons for non-routine tasks sometimes move between releases.",
+                                "c. No, the layout or key element locations are often optimized for engagement metrics, changing frequently."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 17,
+                            "text": "Are privacy settings and data usage explained in plain language without technical jargon?",
+                            "options": [
+                                "a. Yes, data usage and privacy settings are explained in simple, concise language within the product, avoiding complex legal or technical jargon.",
+                                "b. Information is available, but it often requires reading external legal documents or contains technical terms that require interpretation.",
+                                "c. No, the explanation of data usage is opaque or difficult to find within the product interface."
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Agency and Autonomy",
+            "approaches": [
+                {
+                    "name": "Design for Self-Directed, Empowering Experiences",
+                    "questions": [
+                        {
+                            "num": 18,
+                            "text": "Can users control who sees their data and what information is shared?",
+                            "options": [
+                                "a. Yes, users have granular, clearly explained control over who sees their data and what is shared.",
+                                "b. Controls exist, but they are difficult to find, complex, or not fully explained in plain language.",
+                                "c. No, data sharing or privacy is automatic with very limited or hidden user controls."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 19,
+                            "text": "Can users set their own goals in the product, rather than following pre-set goals?",
+                            "options": [
+                                "a. Yes, the product is fundamentally built to support and track user-defined personal goals or purpose.",
+                                "b. The product focuses on pre-set goals, but allows for limited customization or adjustment.",
+                                "c. No, users are entirely restricted to a fixed set of pre-designed goals or outcomes."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 20,
+                            "text": "Can users explore features on their own without being forced through a fixed tutorial?",
+                            "options": [
+                                "a. Yes, all guidance (e.g., tutorials, tips) is optional or easily skippable to support self-directed exploration.",
+                                "b. A mandatory tutorial is present, but it is brief, clearly paced, and skippable on subsequent uses.",
+                                "c. No, users are forced through a mandatory, fixed, unskippable tutorial or introduction."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 21,
+                            "text": "Does your product explain how it works in clear terms so users understand what's happening?",
+                            "options": [
+                                "a. Yes, the product uses in-context, transparent language to explain system behavior, processes, or automated logic.",
+                                "b. Explanations are available, but are often technical or require searching separate documentation.",
+                                "c. No, the product's internal processes (e.g., algorithms, data collection) are opaque or poorly communicated."
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Position Seniors as Primary Users, Not Caregivers",
+                    "questions": [
+                        {
+                            "num": 22,
+                            "text": "Is your product designed for the older adult to use themselves, rather than for someone else to use on their behalf?",
+                            "options": [
+                                "a. Yes",
+                                "b. Somewhat (partially available)",
+                                "c. No"
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 23,
+                            "text": "If your product involves caregivers or family members, can the older adult control what those people can see or do?",
+                            "options": [
+                                "a. Yes",
+                                "b. Somewhat (partially available)",
+                                "c. No"
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 24,
+                            "text": "If your product collects data about user activity or behavior, is that information shown to the user first before being shared with others?",
+                            "options": [
+                                "a. Yes",
+                                "b. Somewhat (partially available)",
+                                "c. No"
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 25,
+                            "text": "If your product monitors user activity, does it provide insights that help users make their own decisions, rather than just alerting others?",
+                            "options": [
+                                "a. Yes",
+                                "b. Somewhat (partially available)",
+                                "c. No"
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Connect to Purpose, Identity, and Contribution",
+                    "questions": [
+                        {
+                            "num": 26,
+                            "text": "Can users share their knowledge, stories, or experience with others?",
+                            "options": [
+                                "a. Yes, the product includes dedicated, easy-to-use features for users to share their knowledge, stories, or expertise with others.",
+                                "b. Sharing is possible but relies on external tools or complex, non-dedicated methods (e.g., manual copy/paste).",
+                                "c. No, the product is focused on information consumption, offering no clear mechanism for user-to-user contribution."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 27,
+                            "text": "Does your product connect users with family members or people from different generations?",
+                            "options": [
+                                "a. Yes, the product explicitly facilitates connection with family or people from different generations as a core feature.",
+                                "b. Connection is possible but not a primary feature, relying on generic social network links or complex setup.",
+                                "c. No, the product is primarily focused on individual use and lacks features for family or cross-generational connection."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 28,
+                            "text": "Does your product recognize and celebrate user achievements in ways that highlight their contribution, social identity, or personal purpose (e.g., \"shared expertise,\" \"helped a family member\"), rather than focusing solely on technical metrics?",
+                            "options": [
+                                "a. Yes, recognition is frequent and explicitly framed around purpose, contribution, or mastery.",
+                                "b. Recognition exists but is often generic or focuses mainly on internal product metrics (e.g., points, time spent).",
+                                "c. No, the product rarely recognizes achievements, or the celebrations are technical."
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Co-Design WITH Senior Adults, Not FOR Them",
+                    "questions": [
+                        {
+                            "num": 29,
+                            "text": "Have you involved targetted adults in making decisions about what features to build and how they should work?",
+                            "options": [
+                                "a. Yes, the targeted age-group are active participants in the discovery and definition phase (e.g., co-design workshops, regular feature ideation).",
+                                "b. We get feedback from older adults, but they are not involved in the initial decision-making about what to build.",
+                                "c. No, the product decisions are made internally or based on generic younger user data."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 30,
+                            "text": "Do you regularly test your product with older adults before releasing new features?",
+                            "options": [
+                                "a. Yes, formal usability testing with the targetted audience is mandatory before any new feature or major update is released.",
+                                "b. We occasionally test with older adults, but it is not a mandatory or consistent step in our release process.",
+                                "c. No, our testing pool is primarily younger adults or is based on passive analytics."
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Holistic Wellbeing",
+            "approaches": [
+                {
+                    "name": "Design for All Four Domains of Wellbeing",
+                    "questions": [
+                        {
+                            "num": 31,
+                            "text": "Does the product include features that help the user track, monitor, or actively promote physical health, activity, or safe movement?",
+                            "options": [
+                                "a. Yes, dedicated features intentionally promote physical wellbeing.",
+                                "b. It includes minor or optional physical-related features, but it is not a focus.",
+                                "c. No, the product has no features related to physical health or activity."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 32,
+                            "text": "Does the product include features that intentionally promote cognitive engagement (e.g., low-stakes learning, memory prompts, skill practice) to complement its primary function?",
+                            "options": [
+                                "a. Yes, dedicated, easy-to-use cognitive/learning features are intentionally integrated.",
+                                "b. Content exists, but it's not a clear, intentional feature or requires external effort.",
+                                "c. No, the product focuses entirely on its primary function without cognitive elements."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 33,
+                            "text": "Does the product provide users with opportunities to connect their activity to purpose, contribution, or sharing their expertise with others (e.g., mentoring, knowledge sharing)?",
+                            "options": [
+                                "a. Yes, contribution and purpose are explicitly enabled via dedicated, easy-to-use features.",
+                                "b. Sharing is possible but relies on generic social links and is not explicitly purpose-driven.",
+                                "c. No, the design is focused entirely on individual benefit and consumption."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 34,
+                            "text": "Does the product offer features that support social awareness, connection, or interaction (including passive social presence) to complement its primary function?",
+                            "options": [
+                                "a. Yes, the design deliberately includes elements that communicate social presence/awareness (passive social) or active connection.",
+                                "b. Communication is possible but not a design priority or requires external effort.",
+                                "c. No, the product is primarily a solo experience with no social component."
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Design for Socially-Connected Aging",
+                    "questions": [
+                        {
+                            "num": 35,
+                            "text": "Does your product enable users to connect with people from different age groups?",
+                            "options": [
+                                "a. Yes, fully supported.",
+                                "b. Somewhat, but with friction.",
+                                "c. No, not supported"
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 36,
+                            "text": "Can users feel a sense of presence or connection with others without being required to actively participate?",
+                            "options": [
+                                "a. Yes, fully supported.",
+                                "b. Somewhat, but with friction.",
+                                "c. No, not supported"
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 37,
+                            "text": "Can users participate at different levels, from just observing to fully engaging?",
+                            "options": [
+                                "a. Yes, fully supported.",
+                                "b. Somewhat, but with friction.",
+                                "c. No, not supported"
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 38,
+                            "text": "Does your product help users find others with similar interests or experiences?",
+                            "options": [
+                                "a. Yes, fully supported.",
+                                "b. Somewhat, but with friction.",
+                                "c. No, not supported"
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Include Cultural, Economic, and Contextual Accessibility",
+                    "questions": [
+                        {
+                            "num": 39,
+                            "text": "Does your product make users feel capable and valued, not just safe and protected?",
+                            "options": [
+                                "a. Yes, by design.",
+                                "b. Somewhat, but not consistently.",
+                                "c. No, not a priority."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 40,
+                            "text": "Does your product work for people with different economic situations or living contexts?",
+                            "options": [
+                                "a. Yes, by design.",
+                                "b. Somewhat, but not consistently.",
+                                "c. No, not a priority."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 41,
+                            "text": "Does your product respect different cultural approaches to aging and technology?",
+                            "options": [
+                                "a. Yes, by design.",
+                                "b. Somewhat, but not consistently.",
+                                "c. No, not a priority."
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Meaningful Engagement",
+            "approaches": [
+                {
+                    "name": "Design for Intrinsic Motivation and Wellbeing",
+                    "questions": [
+                        {
+                            "num": 42,
+                            "text": "Can users easily pause their activity, exit the product, and return later without losing their progress, being penalized, or receiving intrusive \"guilt-trip\" messages?",
+                            "options": [
+                                "a. Yes, progress is reliably saved, and the design supports frictionless pausing/exiting.",
+                                "b. Progress is usually saved, but pausing is not explicitly supported or involves some friction.",
+                                "c. No, the design penalizes or discourages breaks by losing progress or sending intrusive reminders."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 43,
+                            "text": "Does your product offer scheduled, predictable content, activities, or communications that align with and respect the user's existing daily routines and desire for planning?",
+                            "options": [
+                                "a. Yes, key activities are predictable and aligned with user routines, minimizing disruptive spontaneity.",
+                                "b. Content is somewhat predictable but is not easily scheduled or tied to user routines.",
+                                "c. No, content and activities are unpredictable or event-driven, disrupting user routines."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 44,
+                            "text": "Do users have granular, easy-to-access control over when, how often, and for what purpose they receive notifications or alerts?",
+                            "options": [
+                                "a. Yes, control is granular, easy-to-find, and allows disabling based on purpose/time.",
+                                "b. Control exists, but it's limited (e.g., all-or-nothing) or settings are hard to locate.",
+                                "c. No, notifications are automatic and intrusive with minimal user control."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 45,
+                            "text": "Can users revisit, rewatch, or easily review past content, tutorials, or data that is critical for building knowledge or achieving personal mastery?",
+                            "options": [
+                                "a. Yes, review is a dedicated, low-friction feature for all critical content.",
+                                "b. Review is possible but often requires a difficult search or manual workarounds.",
+                                "c. No, content is ephemeral or access to past content is deliberately difficult."
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Adaptation, Personalization, and Accessible Interfaces",
+            "approaches": [
+                {
+                    "name": "Design for Adaptation, Not Perfection",
+                    "questions": [
+                        {
+                            "num": 46,
+                            "text": "Can users adjust key interface settings (e.g., text size, contrast, target size, pacing) easily and dynamically as their physical or cognitive needs change over time?",
+                            "options": [
+                                "a. Yes, dynamic customization of core interface elements is a dedicated, easily accessible feature.",
+                                "b. Some basic settings can be changed, but core elements are static or difficult to customize.",
+                                "c. No, the interface is static and does not allow for dynamic changes based on user need."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 47,
+                            "text": "Does the product support switching between multiple interaction modalities (e.g., visual/touch, voice commands, keyboard control) for core features?",
+                            "options": [
+                                "a. Yes, users can consistently switch interaction modes (e.g., from touch to voice) to complete the primary tasks.",
+                                "b. It supports multiple modes, but switching is inconsistent or only available for auxiliary features.",
+                                "c. No, the product relies on a single, fixed interaction modality (e.g., only touch)."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 48,
+                            "text": "If a user experiences a decline in a specific capability (e.g., fine motor skills, vision), are core product features still usable and accessible through alternative input methods?",
+                            "options": [
+                                "a. Yes, core features are intentionally designed with accessible redundancy to ensure continued use despite capability change.",
+                                "b. It is possible to use core features, but it requires a difficult workaround or significant external assistance.",
+                                "c. No, a decline in ability prevents or severely limits the use of core features."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 49,
+                            "text": "Does the product's language and design emphasize the user's ability and goals (what they can achieve) rather than focusing on age-related deficits, safety, or limitations?",
+                            "options": [
+                                "a. Yes, the language and framing are intentionally positive and focused on empowerment/mastery.",
+                                "b. The language is neutral but occasionally references safety or deficits in key areas.",
+                                "c. No, the design's language routinely implies user limitation or requires reliance on external monitoring."
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Address Specific Usability Barriers Through Multiple Modalities",
+                    "questions": [
+                        {
+                            "num": 50,
+                            "text": "Pick the accessibility features your product can offer (Select all that apply)",
+                            "options": [
+                                "1. Users can increase text size by 200% without loss of content or functionality",
+                                "2. All text and key elements maintain a high contrast ratio (e.g., dark text on a light background, avoiding problematic color combinations like blue/green with black)",
+                                "3. All interactive targets (buttons, links) are large, clearly separated, and have sufficient space around them for easy tapping",
+                                "4. Users can access all key functionality using only a keyboard or external keyboard-like controls (e.g., speech input, switch access)",
+                                "5. Users can complete primary tasks and input data using voice commands",
+                                "6. The product limits distracting or moving content (e.g., auto-playing videos, blinking elements, unexpected animations) and allows users to pause or hide them",
+                                "7. Instructions, labels, and error messages use simple, clear, and unambiguous language with minimal technical jargon or abbreviations",
+                                "8. Information remains visible on screen (persistent menus, no horizontal scrolling) rather than requiring users to memorize it or scroll excessively",
+                                "9. The user can easily pause, stop, or hide any moving, blinking, or auto-updating content to maintain focus"
+                            ],
+                            "is_msq": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Build Person-Centered Profiles",
+                    "questions": [
+                        {
+                            "num": 51,
+                            "text": "Does your product automatically learn and remember user behavior (e.g., speed of interaction, preferred features, time of use) to proactively improve the experience over time?",
+                            "options": [
+                                "a. Yes, the product includes an adaptive layer that automatically adjusts features or pacing based on user behavior.",
+                                "b. It can save some basic preferences, but it does not proactively learn or adjust the interface based on usage patterns.",
+                                "c. No, the product is static and relies entirely on manual user configuration."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 52,
+                            "text": "Are the user's settings, preferences, and progress reliably saved and restored across different sessions and devices without requiring the user to reconfigure them?",
+                            "options": [
+                                "a. Yes, all settings and session context are reliably and automatically retained and synced across devices.",
+                                "b. Preferences are sometimes saved, but core settings often revert or need re-entering on new sessions/devices.",
+                                "c. No, the user must manually reconfigure the product for optimal use in most sessions."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 53,
+                            "text": "Can users easily adjust the level of help, guidance, or 'scaffolding' they receive from the product (e.g., turning off certain tips, increasing confirmation prompts)?",
+                            "options": [
+                                "a. Yes, the user has granular control over the amount and type of proactive assistance provided by the system.",
+                                "b. Assistance is all-or-nothing (e.g., turn all tutorials on/off) or the controls are difficult to locate.",
+                                "c. No, the level of assistance is fixed and cannot be adjusted by the user."
+                            ],
+                            "is_msq": false
+                        },
+                        {
+                            "num": 54,
+                            "text": "Can users easily hide or permanently disable features they find unhelpful, distracting, or overwhelming to declutter the interface and simplify their experience?",
+                            "options": [
+                                "a. Yes, users can easily and permanently customize their view by hiding unwanted features.",
+                                "b. Features can sometimes be minimized but cannot be permanently removed or hidden from the interface.",
+                                "c. No, all features are permanently visible regardless of user preference or need."
+                            ],
+                            "is_msq": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+
+let currentQuestionIndex = 0;
+let answers = {};
+let questionsList = [];
+let productName = '';
+let productDescription = '';
+let selectedAspects = [];
+
+function initializeQuestions() {
+    questionsList = [];
+    assessmentData.principles.forEach(principle => {
+        if (selectedAspects.includes(principle.name)) {
+            principle.approaches.forEach(approach => {
+                approach.questions.forEach(q => {
+                    questionsList.push({
+                        principleId: principle.name,
+                        principleName: principle.name,
+                        approachName: approach.name,
+                        ...q
+                    });
+                });
+            });
+        }
+    });
+}
+
+function validateAndStart() {
+    productName = document.getElementById('productName').value.trim();
+    productDescription = document.getElementById('productDescription').value.trim();
+    const checkboxes = document.querySelectorAll('.design-aspect-checkbox:checked');
+    selectedAspects = Array.from(checkboxes).map(cb => cb.value);
+    
+    const errorDiv = document.getElementById('validationError');
+    if (!productName) {
+        errorDiv.textContent = 'Please enter your product name';
+        errorDiv.style.display = 'block';
+        document.getElementById('productName').focus();
+        return;
+    }
+    if (!productDescription) {
+        errorDiv.textContent = 'Please provide a product description';
+        errorDiv.style.display = 'block';
+        document.getElementById('productDescription').focus();
+        return;
+    }
+    if (selectedAspects.length === 0) {
+        errorDiv.textContent = 'Please select at least one design aspect to evaluate';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    errorDiv.style.display = 'none';
+    startAssessment();
+}
+
+function startAssessment() {
+    initializeQuestions();
+    document.getElementById('welcome').style.display = 'none';
+    document.getElementById('questions').classList.add('active');
+    document.getElementById('navButtons').style.display = 'flex';
+    saveProgress();
+    showQuestion(0);
+}
+
+function showQuestion(index) {
+    if (index < 0 || index >= questionsList.length) return;
+    
+    currentQuestionIndex = index;
+    const q = questionsList[index];
+    
+    const progress = ((index + 1) / questionsList.length) * 100;
+    document.getElementById('progressFill').style.width = progress + '%';
+    document.getElementById('progressText').textContent = `Question ${index + 1} of ${questionsList.length}`;
+    
+    document.getElementById('principleBadge').textContent = q.principleName;
+    document.getElementById('approachName').textContent = q.approachName;
+    document.getElementById('questionText').textContent = q.text;
+    
+    const optionsContainer = document.getElementById('optionsContainer');
+    optionsContainer.innerHTML = '';
+    
+    const inputType = q.is_msq ? 'checkbox' : 'radio';
+    const inputName = 'q' + q.num;
+    
+    q.options.forEach((option, optIdx) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option';
+        
+        const input = document.createElement('input');
+        input.type = inputType;
+        input.name = inputName;
+        input.value = optIdx;
+        input.id = `opt_${q.num}_${optIdx}`;
+        
+        if (answers[q.num]) {
+            if (q.is_msq) {
+                if (answers[q.num].includes(optIdx)) {
+                    input.checked = true;
+                    optionDiv.classList.add('selected');
+                }
+            } else {
+                if (answers[q.num] === optIdx) {
+                    input.checked = true;
+                    optionDiv.classList.add('selected');
+                }
+            }
+        }
+        
+        input.addEventListener('change', () => {
+            if (q.is_msq) {
+                if (input.checked) {
+                    optionDiv.classList.add('selected');
+                } else {
+                    optionDiv.classList.remove('selected');
+                }
+                updateMSQAnswer(q.num);
+            } else {
+                document.querySelectorAll(`input[name="${inputName}"]`).forEach(inp => {
+                    inp.parentElement.classList.remove('selected');
+                });
+                optionDiv.classList.add('selected');
+                answers[q.num] = optIdx;
+            }
+            updateNextButton();
+            saveProgress();
+        });
+        
+        const label = document.createElement('label');
+        label.htmlFor = input.id;
+        label.className = 'option-text';
+        label.textContent = option;
+        label.style.cursor = 'pointer';
+        
+        optionDiv.appendChild(input);
+        optionDiv.appendChild(label);
+        optionsContainer.appendChild(optionDiv);
+    });
+    
+    document.getElementById('prevBtn').disabled = index === 0;
+    updateNextButton();
+}
+
+function updateMSQAnswer(qNum) {
+    const checked = Array.from(document.querySelectorAll(`input[name="q${qNum}"]:checked`)).map(inp => parseInt(inp.value));
+    if (checked.length > 0) {
+        answers[qNum] = checked;
+    } else {
+        delete answers[qNum];
+    }
+}
+
+function updateNextButton() {
+    const q = questionsList[currentQuestionIndex];
+    const isAnswered = answers[q.num] !== undefined;
+    document.getElementById('nextBtn').disabled = !isAnswered;
+}
+
+function nextQuestion() {
+    if (currentQuestionIndex < questionsList.length - 1) {
+        showQuestion(currentQuestionIndex + 1);
+    } else {
+        showResults();
+    }
+}
+
+function previousQuestion() {
+    if (currentQuestionIndex > 0) {
+        showQuestion(currentQuestionIndex - 1);
+    }
+}
+
+function confirmReset() {
+    document.getElementById('resetModal').classList.add('active');
+}
+
+function closeResetModal() {
+    document.getElementById('resetModal').classList.remove('active');
+}
+
+function resetAssessment() {
+    localStorage.removeItem('agetechAssessmentProgress');
+    location.reload();
+}
+
+function pauseAssessment() {
+    saveProgress();
+    document.getElementById('pauseModal').classList.add('active');
+}
+
+function resumeAssessment() {
+    document.getElementById('pauseModal').classList.remove('active');
+}
+
+function saveProgress() {
+    const progress = {
+        productName,
+        productDescription,
+        selectedAspects,
+        answers,
+        currentQuestionIndex
+    };
+    localStorage.setItem('agetechAssessmentProgress', JSON.stringify(progress));
+}
+
+function loadProgress() {
+    const saved = localStorage.getItem('agetechAssessmentProgress');
+    if (saved) {
+        const progress = JSON.parse(saved);
+        productName = progress.productName;
+        productDescription = progress.productDescription;
+        selectedAspects = progress.selectedAspects;
+        answers = progress.answers;
+        currentQuestionIndex = progress.currentQuestionIndex;
+        return true;
+    }
+    return false;
+}
+
+function calculateScore() {
+    const principleScores = {};
+    
+    assessmentData.principles.forEach(principle => {
+        if (!selectedAspects.includes(principle.name)) return;
+        
+        let totalPoints = 0;
+        let earnedPoints = 0;
+        
+        principle.approaches.forEach(approach => {
+            approach.questions.forEach(q => {
+                if (q.is_msq) {
+                    totalPoints += 2;
+                    const selectedCount = answers[q.num] ? answers[q.num].length : 0;
+                    const percentage = (selectedCount / 9) * 100;
+                    if (percentage >= 80) earnedPoints += 2;
+                    else if (percentage >= 60) earnedPoints += 1;
+                    else earnedPoints += 0;
+                } else {
+                    totalPoints += 2;
+                    const answerIdx = answers[q.num];
+                    if (answerIdx === 0) earnedPoints += 2;
+                    else if (answerIdx === 1) earnedPoints += 1;
+                    else earnedPoints += 0;
+                }
+            });
+        });
+        
+        principleScores[principle.name] = {
+            earned: earnedPoints,
+            total: totalPoints,
+            percentage: (earnedPoints / totalPoints) * 100
+        };
+    });
+    
+    return principleScores;
+}
+
+function getRecommendations(principleName, percentage) {
+    const recs = {
+        'Learning Infrastructure': {
+            strong: ['Your product has excellent learning infrastructure. Continue to gather user feedback on onboarding effectiveness.', 'Consider creating case studies showcasing how users build confidence with your product.', 'Document your best practices to share with your team and maintain consistency as you grow.'],
+            moderate: ['Enhance your onboarding flow to better capture user goals and customize the initial experience.', 'Add more practice modes or sandboxes where users can explore without consequences.', 'Improve consistency in interface elements across all screens to reduce cognitive load.', 'Provide clearer, more immediate feedback after user actions to build confidence.'],
+            low: ['Prioritize redesigning your onboarding to ask about user goals and personalize the experience.', 'Create low-stakes practice environments where users can build confidence safely.', 'Standardize the location and labeling of key actions (back buttons, help, save) across all screens.', 'Implement immediate visual or auditory confirmation for all significant user actions.', 'Add confirmation steps for all non-reversible actions to prevent costly mistakes.']
+        },
+        'Agency and Autonomy': {
+            strong: ['Your product excels at empowering users. Keep prioritizing user control and transparency.', 'Share your approach to user agency as a competitive advantage in your marketing.', 'Continue to position older adults as the primary users in all design decisions.'],
+            moderate: ['Give users more granular control over data sharing and privacy settings.', 'Enable users to set and track their own personal goals rather than pre-set objectives.', 'Make tutorials optional and skippable to support self-directed exploration.', 'If your product involves caregivers, ensure the older adult controls what they can access.'],
+            low: ['Fundamentally redesign to position the older adult as the primary user, not the caregiver.', 'Implement clear, accessible privacy controls that explain data usage in plain language.', 'Replace pre-set goals with user-defined goals that reflect individual purposes.', 'Remove mandatory tutorials and create optional, flexible guidance instead.', 'Add features that let users share their knowledge and expertise with others.']
+        },
+        'Holistic Wellbeing': {
+            strong: ['Your product addresses wellbeing comprehensively. Consider highlighting this in your value proposition.', 'Explore partnerships with organizations focused on healthy aging to expand your impact.', 'Document how users experience wellbeing benefits across multiple domains.'],
+            moderate: ['Integrate features that explicitly support physical health or activity alongside your core function.', 'Add cognitive engagement elements like low-stakes learning or skill practice.', 'Create opportunities for users to connect their activity to purpose and contribution.', 'Enable passive social presence so users can feel connected without forced participation.'],
+            low: ['Expand your product vision beyond the primary function to include wellbeing dimensions.', 'Add features that promote physical activity, cognitive engagement, social connection, and purpose.', 'Enable cross-generational connections and community features.', 'Design for cultural, economic, and contextual diversity in how people age.', 'Help users feel capable and valued, not just safe and protected.']
+        },
+        'Meaningful Engagement': {
+            strong: ['Your product successfully promotes intrinsic motivation. Continue to avoid manipulative engagement tactics.', 'Consider writing about your approach to respectful engagement as a thought leadership piece.', 'Monitor that your engagement remains healthy as you add features.'],
+            moderate: ['Allow users to easily pause and return without losing progress or receiving guilt messages.', 'Provide more predictable, scheduled content that aligns with user routines.', 'Give users granular control over notification frequency, timing, and purpose.', 'Make past content and tutorials easily accessible for review and reference.'],
+            low: ['Remove any "guilt-trip" messages or penalties for pausing or taking breaks.', 'Replace unpredictable content drops with scheduled, routine-friendly activities.', 'Implement comprehensive notification controls that respect user preferences and time.', 'Create a library of past content, tutorials, and data that users can revisit anytime.', 'Shift from extrinsic motivators (points, streaks) to intrinsic value and personal meaning.']
+        },
+        'Adaptation, Personalization, and Accessible Interfaces': {
+            strong: ['Your product demonstrates excellent accessibility and adaptability. This is a significant competitive advantage.', 'Consider pursuing WCAG 2.1 AAA certification to formalize your commitment.', 'Share your accessibility practices as a model for other AgeTech companies.'],
+            moderate: ['Add more dynamic customization options for text size, contrast, and interaction pacing.', 'Support multiple interaction modalities (touch, voice, keyboard) for core features.', 'Implement adaptive learning that automatically adjusts to user behavior over time.', 'Improve syncing of settings and preferences across devices and sessions.'],
+            low: ['Make accessibility a top priority - implement basic features like text size adjustment and high contrast.', 'Support keyboard-only navigation and alternative input methods for all core features.', 'Reduce distracting content and give users control over animations and auto-playing media.', 'Create person-centered profiles that remember user preferences and adapt over time.', 'Use empowering language that focuses on abilities and goals rather than deficits and limitations.']
+        }
+    };
+    
+    if (percentage >= 80) return recs[principleName].strong;
+    if (percentage >= 50) return recs[principleName].moderate;
+    return recs[principleName].low;
+}
+
+function showResults() {
+    document.getElementById('questions').classList.remove('active');
+    document.getElementById('results').classList.add('active');
+    
+    const scores = calculateScore();
+    
+    let totalEarned = 0;
+    let totalPossible = 0;
+    Object.values(scores).forEach(s => {
+        totalEarned += s.earned;
+        totalPossible += s.total;
+    });
+    
+    const overallPercentage = (totalEarned / totalPossible) * 100;
+    
+    document.getElementById('overallScore').textContent = totalEarned + ' / ' + totalPossible;
+    document.getElementById('overallPercentage').textContent = Math.round(overallPercentage) + '% Overall Alignment';
+    
+    const resultsHeader = document.querySelector('#results .overall-score');
+    const productNameHeader = document.createElement('h3');
+    productNameHeader.style.fontSize = '20px';
+    productNameHeader.style.marginBottom = '8px';
+    productNameHeader.style.opacity = '0.95';
+    productNameHeader.textContent = productName;
+    resultsHeader.insertBefore(productNameHeader, resultsHeader.firstChild);
+    
+    const productDescDiv = document.createElement('p');
+    productDescDiv.style.fontSize = '14px';
+    productDescDiv.style.marginBottom = '20px';
+    productDescDiv.style.opacity = '0.9';
+    productDescDiv.style.fontStyle = 'italic';
+    productDescDiv.textContent = productDescription;
+    resultsHeader.insertBefore(productDescDiv, resultsHeader.children[1]);
+    
+    const aspectsNote = document.createElement('p');
+    aspectsNote.style.fontSize = '13px';
+    aspectsNote.style.marginTop = '10px';
+    aspectsNote.style.opacity = '0.85';
+    aspectsNote.textContent = `Evaluated: ${selectedAspects.join(', ')}`;
+    resultsHeader.appendChild(aspectsNote);
+    
+    const resultsContainer = document.getElementById('principleResults');
+    resultsContainer.innerHTML = '';
+    
+    selectedAspects.forEach(aspect => {
+        if (scores[aspect]) {
+            const score = scores[aspect];
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'principle-result';
+            
+            let statusClass = 'status-needs-attention';
+            let statusText = 'Needs Attention';
+            if (score.percentage >= 80) {
+                statusClass = 'status-strong';
+                statusText = 'Strong';
+            } else if (score.percentage >= 50) {
+                statusClass = 'status-moderate';
+                statusText = 'Moderate';
+            }
+            
+            const recs = getRecommendations(aspect, score.percentage);
+            
+            resultDiv.innerHTML = `
+                <div class="principle-header">
+                    <div class="principle-name">${aspect}</div>
+                    <div class="status-badge ${statusClass}">${statusText}</div>
+                </div>
+                <div class="principle-score">${score.earned} / ${score.total} points (${Math.round(score.percentage)}%)</div>
+                <div class="recommendations">
+                    <h4>Recommendations:</h4>
+                    <ul>
+                        ${recs.map(r => `<li>${r}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            resultsContainer.appendChild(resultDiv);
+        }
+    });
+    
+    localStorage.removeItem('agetechAssessmentProgress');
+}
+
+initializeQuestions();
+
+document.addEventListener('DOMContentLoaded', function() {
+    const aspectCheckboxes = document.querySelectorAll('.design-aspect-checkbox');
+    aspectCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const label = this.closest('.aspect-option');
+            if (this.checked) {
+                label.style.borderColor = '#667eea';
+                label.style.background = '#e8efff';
+            } else {
+                label.style.borderColor = '#e0e0e0';
+                label.style.background = '#f8f9fa';
+            }
+        });
+    });
+    
+    if (loadProgress() && confirm('Resume previous assessment?')) {
+        startAssessment();
+        showQuestion(currentQuestionIndex);
+    }
+});
+</script>
+</body>
+</html>

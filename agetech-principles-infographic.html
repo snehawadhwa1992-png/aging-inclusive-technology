@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgeTech Design Framework: 5 Big Ideas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 18px;
+            color: #718096;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .principle-card {
+            background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 6px solid;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .principle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .principle-card.p1 { border-left-color: #667eea; }
+        .principle-card.p2 { border-left-color: #f093fb; }
+        .principle-card.p3 { border-left-color: #4facfe; }
+        .principle-card.p4 { border-left-color: #43e97b; }
+        .principle-card.p5 { border-left-color: #fa709a; }
+
+        .principle-number {
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 45px;
+            margin-bottom: 15px;
+        }
+
+        .principle-card.p2 .principle-number { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .principle-card.p3 .principle-number { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .principle-card.p4 .principle-number { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .principle-card.p5 .principle-number { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+
+        .principle-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        .guidelines-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            margin-top: 20px;
+        }
+
+        .guidelines-list {
+            list-style: none;
+        }
+
+        .guidelines-list li {
+            padding: 10px 0 10px 25px;
+            position: relative;
+            color: #4a5568;
+            font-size: 15px;
+            line-height: 1.5;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .guidelines-list li:last-child {
+            border-bottom: none;
+        }
+
+        .guidelines-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .principle-card.p2 .guidelines-list li:before { color: #f093fb; }
+        .principle-card.p3 .guidelines-list li:before { color: #4facfe; }
+        .principle-card.p4 .guidelines-list li:before { color: #43e97b; }
+        .principle-card.p5 .guidelines-list li:before { color: #fa709a; }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .footer strong {
+            color: #2d3748;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 30px;
+            }
+
+            .principle-card {
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .principles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AgeTech Design Framework</h1>
+            <p>Five Evidence-Based Big Ideas with Design Guidelines for Creating Technology for Older Adults</p>
+        </div>
+
+        <div class="principles-grid">
+            <!-- Principle 1 -->
+            <div class="principle-card p1">
+                <div class="principle-number">1</div>
+                <div class="principle-title">Learning Infrastructure, Not Just Product Features</div>
+                <div class="guidelines-label">Design Guidelines</div>
+                <ul class="guidelines-list">
+                    <li>Identity-Affirming Design</li>
+                    <li>Learning Through Low-Stakes Practice and Gamification</li>
+                    <li>Design Cognitive-Friendly Interaction Layers</li>
+                    <li>Create Coherent Ecosystems & Plan for Frictionless Entry and Exit</li>
+                    <li>Trust-Building Through Transparency and Ongoing Support</li>
+                </ul>
+            </div>
+
+            <!-- Principle 2 -->
+            <div class="principle-card p2">
+                <div class="principle-number">2</div>
+                <div class="principle-title">Agency and Autonomy, Not Monitoring and Control</div>
+                <div class="guidelines-label">Design Guidelines</div>
+                <ul class="guidelines-list">
+                    <li>Design for Self-Directed, Empowering Experiences</li>
+                    <li>Position Seniors as Primary Users, Not Caregivers</li>
+                    <li>Connect to Purpose, Identity, and Contribution</li>
+                    <li>Co-Design WITH Senior Adults, Not FOR Them</li>
+                </ul>
+            </div>
+
+            <!-- Principle 3 -->
+            <div class="principle-card p3">
+                <div class="principle-number">3</div>
+                <div class="principle-title">Holistic Wellbeing, Not Just Physical Health</div>
+                <div class="guidelines-label">Design Guidelines</div>
+                <ul class="guidelines-list">
+                    <li>Design for All Four Domains of Wellbeing</li>
+                    <li>Design for Socially-Connected Aging</li>
+                    <li>Include Cultural, Economic, and Contextual Accessibility</li>
+                </ul>
+            </div>
+
+            <!-- Principle 4 -->
+            <div class="principle-card p4">
+                <div class="principle-number">4</div>
+                <div class="principle-title">Meaningful Engagement, Not Just Time-Filling</div>
+                <div class="guidelines-label">Design Guidelines</div>
+                <ul class="guidelines-list">
+                    <li>Design for Intrinsic Motivation and User-Controlled Engagement</li>
+                </ul>
+            </div>
+
+            <!-- Principle 5 -->
+            <div class="principle-card p5">
+                <div class="principle-number">5</div>
+                <div class="principle-title">Adaptation, Personalization, and Accessible Interfaces</div>
+                <div class="guidelines-label">Design Guidelines</div>
+                <ul class="guidelines-list">
+                    <li>Design for Adaptation, Not Perfection</li>
+                    <li>Address Specific Usability Barriers Through Multiple Modalities</li>
+                    <li>Build Person-Centered Profiles</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <strong>Research Foundation:</strong> Brittne Kakulla, PhD (AARP) • Nathaniel Farouz (Sindora Keppel Senior) • Neil D'Souza (GetSetUp)
+        </div>
+    </div>
+</body>
+</html>
